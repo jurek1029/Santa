@@ -49,10 +49,12 @@ public class GameView extends GLSurfaceView
 	public void load()
 	{
 		Engine.ObjTab[0] = new Object(R.drawable.statek);
+		Engine.line = new Line();				
 	}
 	public void load(GL10 gl)
 	{
 		Engine.ObjTab[0] = new Object(R.drawable.statek,gl);
+		Engine.line = new Line();
 	}
 	
 	@Override

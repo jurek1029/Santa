@@ -1,5 +1,7 @@
 package santa.v1;
 
+import java.util.Vector;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -8,6 +10,7 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.opengl.GLSurfaceView.Renderer;
+import android.util.Pair;
 
 public class GLES2Renderer implements Renderer
 {
@@ -19,6 +22,7 @@ public class GLES2Renderer implements Renderer
 	public static float[] mProjectionMatrix = new float[16];
 	public static float[] mMVPMatrix = new float[16];
 	public static float[] mLightModelMatrix = new float[16];	
+	public static float[] mColor = new float[] {1,1,0,1};
 	
 	public static int mMVPMatrixHandle;
 	public static int mMVMatrixHandle;
@@ -27,12 +31,19 @@ public class GLES2Renderer implements Renderer
 	public static int mPositionHandle;
 	public static int mTextureCoordinateHandle;
 	public static int mTextureMatrixHandle;
+	public static int mColorHandle;
+	public static int mProcentHandle;
+	public static int mWrapTextureUniformHandle;
+	
+	public static int mWrapTextureHandle;
+	
 	
 	private final float[] mLightPosInModelSpace = new float[] {0.0f, 0.0f, 0.0f, 1.0f};
 	public static final float[] mLightPosInWorldSpace = new float[4];
 	public static final float[] mLightPosInEyeSpace = new float[4];
 	
 	private int mProgramHandle;
+	private int mProgramLineHandle;
 	
 	private long loopStart = 0;
 	private long loopEnd = 0;
@@ -57,6 +68,15 @@ public class GLES2Renderer implements Renderer
 		
 		GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
 		
+		if(Engine.update)
+		{
+			Engine.line.updateVertices((Vector<Pair<Float, Float>>) Engine.pLine.clone());
+			GLES20.glUseProgram(mProgramLineHandle); 	
+	    	getLocations(mProgramLineHandle);
+	    	Matrix.setIdentityM(mModelMatrix, 0); 
+	    	Engine.line.draw();
+		}
+		
 		GLES20.glUseProgram(mProgramHandle); 	
     	getLocations(mProgramHandle);
     
@@ -67,9 +87,15 @@ public class GLES2Renderer implements Renderer
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, Engine.ObjTab[0].textureHandle);
       	GLES20.glUniform1i(mTextureUniformHandle, 0);
+      	GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
+      	GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mWrapTextureHandle);     	
+      	GLES20.glUniform1i(mWrapTextureUniformHandle, 1);
+      	GLES20.glUniform1f(mProcentHandle, .5f);
         
-		Engine.ObjTab[0].draw(); 			
-
+		Engine.ObjTab[0].draw(); 	
+		
+		
+    	
 		loopEnd = System.currentTimeMillis();
 		loopRunTime = (loopEnd-loopStart);
 	}
@@ -85,12 +111,20 @@ public class GLES2Renderer implements Renderer
 			mPositionHandle = GLES20.glGetAttribLocation(program, "a_Position");
 			mTextureCoordinateHandle = GLES20.glGetAttribLocation(program, "a_TexCoordinate");		
 			mTextureMatrixHandle = GLES20.glGetUniformLocation(program, "u_TextureMatrix");
+			mWrapTextureUniformHandle = GLES20.glGetUniformLocation(program, "u_WrapTexture");
+			mProcentHandle = GLES20.glGetUniformLocation(program, "u_pro");
 			
 			Matrix.setIdentityM(mLightModelMatrix, 0);
 			Matrix.translateM(mLightModelMatrix, 0, 0.0f, 2.0f, 6.0f);
 			       
 			Matrix.multiplyMV(mLightPosInWorldSpace, 0, mLightModelMatrix, 0, mLightPosInModelSpace, 0);
 			Matrix.multiplyMV(mLightPosInEyeSpace, 0, mViewMatrix, 0, mLightPosInWorldSpace, 0);    
+		}
+		else if(program == mProgramLineHandle)
+		{
+			mMVPMatrixHandle = GLES20.glGetUniformLocation(program, "u_MVPMatrix");
+			mPositionHandle = GLES20.glGetAttribLocation(program, "a_Position");
+			mColorHandle = GLES20.glGetUniformLocation(program, "u_color");
 		}
 	}
 
@@ -99,8 +133,10 @@ public class GLES2Renderer implements Renderer
 	{
 		GLES20.glViewport(0, 0, width, height);
 		final float ratio = (float) width / height;
+		//Engine.width = width;
+		//Engine.height = height;
 
-		Matrix.perspectiveM(mProjectionMatrix, 0, 50, ratio, .1f, 100f);	
+		Matrix.orthoM(mProjectionMatrix, 0, -.5f, .5f, -.5f, .5f, .1f, 100f);
 	}
 
 	@Override
@@ -123,15 +159,25 @@ public class GLES2Renderer implements Renderer
 	    Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
 	    
 	    String vertexShader = RawResourceReader.readTextFileFromRawResource(mActivityContext, R.raw.per_pixel_vertex_shader_no_normals);
- 		String fragmentShader = RawResourceReader.readTextFileFromRawResource(mActivityContext, R.raw.per_pixel_fragment_shader_no_normals);		
+ 		String fragmentShader = RawResourceReader.readTextFileFromRawResource(mActivityContext, R.raw.per_pixel_fragment_shader_procent);		
 		
 		int vertexShaderHandle = Graphic.compileShader(GLES20.GL_VERTEX_SHADER, vertexShader);		
 		int fragmentShaderHandle = Graphic.compileShader(GLES20.GL_FRAGMENT_SHADER, fragmentShader);		
 		
 		mProgramHandle = Graphic.createAndLinkProgram(vertexShaderHandle, fragmentShaderHandle, 
 				new String[] {"a_Position", "a_TexCoordinate"});				
-               			
+        
+		vertexShader = RawResourceReader.readTextFileFromRawResource(mActivityContext, R.raw.line_vertex_shader);
+		fragmentShader = RawResourceReader.readTextFileFromRawResource(mActivityContext, R.raw.line_fragment_shader);		
+		
+		vertexShaderHandle = Graphic.compileShader(GLES20.GL_VERTEX_SHADER, vertexShader);
+		fragmentShaderHandle = Graphic.compileShader(GLES20.GL_FRAGMENT_SHADER, fragmentShader);
+		
+		mProgramLineHandle = Graphic.createAndLinkProgram(vertexShaderHandle, fragmentShaderHandle, 
+				new String[] {"a_Position"});
+		
 		SantaActivity.gameView.load();
+		mWrapTextureHandle = Graphic.loadTextureGLES2(Engine.ctx, R.drawable.tumblr);
 	 }
 
 }

@@ -14,21 +14,21 @@ import android.opengl.Matrix;
 
 public class Object {
 
-	private float vertices[] = {
+	protected float vertices[] = {
 			0.0f, 0.0f, 0.0f,
 			1.0f, 0.0f, 0.0f,
 			1.0f, 1.0f, 0.0f,
 			0.0f, 1.0f, 0.0f
 	};
 	
-	private float texture[] = {
+	protected float texture[] = {
 			0.0f, 0.0f,
 			1.0f, 0.0f,
 			1.0f, 1.0f,
 			0.0f, 1.0f
 	};
 	
-	private byte indices[]={
+	protected byte indices[]={
 			0, 1, 2,
 			0, 2, 3
 		};
@@ -41,6 +41,12 @@ public class Object {
 	protected final int[] vbo = new int[1];
 	protected final int[] tbo = new int[1];
 	protected final int[] ibo = new int[1];
+	
+	public Object() 
+	{
+		allocate();
+		if(SantaActivity.supportsEs2)allocateGLES2();
+	}
 	
 	public Object(int texture)
 	{

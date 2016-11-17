@@ -1,11 +1,13 @@
 package santa.v1;
 
+import java.util.Vector;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import android.opengl.GLES20;
 import android.opengl.GLU;
 import android.opengl.GLSurfaceView.Renderer;
+import android.util.Pair;
 
 public class GameRenderer implements Renderer
 {
@@ -33,6 +35,14 @@ public class GameRenderer implements Renderer
 		//gl.glLoadIdentity();
 
 		//GLU.gluLookAt(gl, 0.5f, 0.5f, 1, 0.5f, 0.5f, 0, 0, 1, 0);
+		if(Engine.update)
+		{
+			Engine.line.updateVertices((Vector<Pair<Float, Float>>) Engine.pLine.clone());
+			gl.glColor4f(1, 1, 0, 1);
+			gl.glLineWidth(10f);
+	    	Engine.line.draw(gl);
+	    	gl.glColor4f(1, 1, 1, 1);
+		}
 		Engine.ObjTab[0].draw(gl);
 		
 		loopEnd = System.currentTimeMillis();
@@ -45,7 +55,7 @@ public class GameRenderer implements Renderer
 		gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glLoadIdentity();
-		GLU.gluPerspective(gl, 50.0f, (float) width / height, .1f, 100.f);	
+		gl.glOrthof( -.5f, .5f, -.5f, .5f, .1f, 100f);
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		GLU.gluLookAt(gl, 0.5f, 0.5f, 1, 0.5f, 0.5f, 0, 0, 1, 0);
