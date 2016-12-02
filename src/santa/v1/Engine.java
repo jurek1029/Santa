@@ -8,6 +8,7 @@ import android.util.Pair;
 
 public class Engine 
 {
+	public static boolean inGame = false;
 	public static final int GAME_THREAD_FPS_SLEEP = (1000/60);
 	public static Context ctx;
 	public static Object[] ObjTab = new Object[1];	
