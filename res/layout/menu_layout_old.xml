@@ -1,12 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@drawable/menu0" >
 
-    <santa.v1.MenuView
-        android:id="@+id/menuView1"
-        android:layout_width="match_parent"
-   		android:layout_height="match_parent" />
+        
     
     <ImageButton
         android:id="@+id/StartButton"
@@ -14,21 +12,28 @@
         android:layout_height="128dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom= "140dp"
+        android:layout_marginBottom="148dp"
         android:background="@drawable/blank"
         android:scaleType="fitCenter"
         android:src="@drawable/play_button_gray" />
-       
+    
+    
 
     <TextView
         android:id="@+id/Title"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/StartButton"
-
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="34dp"
         android:gravity="center"
         android:text="Best Game Ever"
         android:textColor="#bf0005"
         android:textSize="60sp" />
+
+	<santa.v1.GifMovieView
+	        android:id="@+id/gifMovieView1"
+	        android:layout_width="match_parent"
+	    	android:layout_height="match_parent" />
 
 </RelativeLayout>

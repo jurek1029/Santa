@@ -35,7 +35,9 @@ public class SantaActivity extends Activity {
 	float x,y;
 	// temp
 	TextView tv;
-	Movie m;
+	//Movie m;
+	
+	
 	
     @SuppressLint("NewApi") @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +45,13 @@ public class SantaActivity extends Activity {
         
         //-------------------------------------Menu--------------------------------------------       
         
-        setContentView(R.layout.menu_layout);
+       setContentView(R.layout.menu_layout);
         
         TextView title = (TextView)findViewById(R.id.Title);
         Typeface font = Typeface.createFromAsset(getAssets(), "candcu_font.ttf");
         title.setTypeface(font);
         
         title.bringToFront();
-        
-        GifMovieView gif1 = (GifMovieView) findViewById(R.id.gifMovieView1);
-		gif1.setMovieResource(R.drawable.snow_g);
         
         ImageButton imgbnt = (ImageButton)findViewById(R.id.StartButton);
         imgbnt.setOnClickListener(new View.OnClickListener() {	
@@ -170,10 +169,7 @@ public class SantaActivity extends Activity {
             Typeface font = Typeface.createFromAsset(getAssets(), "candcu_font.ttf");
             title.setTypeface(font);
             
-            title.bringToFront();
-            
-            GifMovieView gif1 = (GifMovieView) findViewById(R.id.gifMovieView1);
-    		gif1.setMovieResource(R.drawable.snow_g);
+            title.bringToFront();          
             
             ImageButton imgbnt = (ImageButton)findViewById(R.id.StartButton);
             imgbnt.setOnClickListener(new View.OnClickListener() {	
