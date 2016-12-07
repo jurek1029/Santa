@@ -49,7 +49,10 @@ public class GameView extends GLSurfaceView
 	public void load()
 	{
 		Engine.ObjTab[0] = new Object(R.drawable.statek);
-		Engine.line = new Line();				
+
+		Engine.ps = new PresentSigns(R.drawable.signs);
+		Engine.ps.setPresentParam(0.5f,0.5f,0f,0f,Engine.ps.genSigns());
+		Engine.line = new Line();
 	}
 	public void load(GL10 gl)
 	{

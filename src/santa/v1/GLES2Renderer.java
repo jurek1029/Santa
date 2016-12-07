@@ -75,11 +75,13 @@ public class GLES2Renderer implements Renderer
 	    	getLocations(mProgramLineHandle);
 	    	Matrix.setIdentityM(mModelMatrix, 0); 
 	    	Engine.line.draw();
+
+
 		}
 		
 		GLES20.glUseProgram(mProgramHandle); 	
     	getLocations(mProgramHandle);
-    
+    /*
         Matrix.setIdentityM(mModelMatrix, 0); 
         Matrix.setIdentityM(mTextureMatrix, 0);
         Matrix.translateM(mTextureMatrix, 0, 0, 0.5f, 0);
@@ -94,7 +96,8 @@ public class GLES2Renderer implements Renderer
         
 		Engine.ObjTab[0].draw(); 	
 		
-		
+		*/
+		Engine.ps.drawSigns();
     	
 		loopEnd = System.currentTimeMillis();
 		loopRunTime = (loopEnd-loopStart);

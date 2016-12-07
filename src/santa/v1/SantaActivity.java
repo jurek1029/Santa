@@ -101,6 +101,9 @@ public class SantaActivity extends Activity {
 			{
 				if(Engine.inGame)
 				{
+					//****TEMP
+					Engine.ps.setPresentParam(0.5f,0.5f,0f,0f,Engine.ps.genSigns());
+					//****
 					Engine.pLine.add(new Pair<Float, Float>(x, y));
 					Engine.update = true;
 				}
