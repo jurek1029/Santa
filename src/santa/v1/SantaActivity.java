@@ -73,7 +73,7 @@ public class SantaActivity extends Activity {
 	    final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
 	    supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;
 
-	    display = getWindowManager().getDefaultDisplay();
+		display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
 		display.getSize(size);
 		Engine.width = size.x;
@@ -101,9 +101,6 @@ public class SantaActivity extends Activity {
 			{
 				if(Engine.inGame)
 				{
-					//****TEMP
-					Engine.ps.setPresentParam(0.5f,0.5f,0f,0f,Engine.ps.genSigns());
-					//****
 					Engine.pLine.add(new Pair<Float, Float>(x, y));
 					Engine.update = true;
 				}
@@ -134,6 +131,8 @@ public class SantaActivity extends Activity {
 					tv.setText(Engine.currentShape.toString());
 					Engine.pLine.removeAllElements();
 					Engine.update = false;
+
+					removeShapeIfPossiblle();
 				}
 				break;
 			}
@@ -159,6 +158,20 @@ public class SantaActivity extends Activity {
     	if(nsMin.norm > Engine.MAX_NORM_DISTORTION) return Engine.shape.NULL;
     	else return nsMin.shape;	
     }
+
+	public void removeShapeIfPossiblle()
+	{
+
+		if (Engine.vect.firstElement()==Engine.currentShape.ordinal())
+		{
+			Engine.vect.remove(0);
+			if (Engine.vect.isEmpty())
+			{
+				Engine.vect = Engine.ps.genSigns();
+				Engine.ps.setPresentParam(0.5f,0.5f,0f,0f,Engine.vect);
+			}
+		}
+	}
     
     @Override
     public void onBackPressed() 

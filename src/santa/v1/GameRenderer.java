@@ -43,7 +43,9 @@ public class GameRenderer implements Renderer
 	    	Engine.line.draw(gl);
 	    	gl.glColor4f(1, 1, 1, 1);
 		}
-		Engine.ObjTab[0].draw(gl);
+		//Engine.ObjTab[0].draw(gl);
+
+		Engine.ps.drawSigns(gl);
 		
 		loopEnd = System.currentTimeMillis();
 		loopRunTime = (loopEnd-loopStart);

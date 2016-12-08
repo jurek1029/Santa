@@ -99,9 +99,42 @@ public class PresentSigns {
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, shape.textureHandle);
         GLES20.glUniform1i(GLES2Renderer.mTextureUniformHandle, 0);
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
+
 
         shape.draw();
+
+    }
+
+    private void drawSingleSign(int number,GL10 gl)
+    {
+        setSignPos();
+        float textureXpos, textureYpos;
+
+        textureXpos = number%Engine.signSpriteSize;
+        textureYpos = number/Engine.signSpriteSize;
+
+        //TODO
+        //set matrixes for GL10
+        /*
+
+        gl.glPushMatrix();
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glTranslatef(shape.x,shape.y, 0);
+        gl.glScalef(shape.size, shape.size, 1);
+        gl.glTranslatef(-.5f, -.5f, 0);
+
+        gl.glMatrixMode(GL10.GL_TEXTURE);
+        gl.glLoadIdentity();
+        gl.glScalef(shape.textureScale, shape.textureScale,1);
+        gl.glTranslatef(textureXpos, textureYpos, 0);
+
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        */
+        shape.draw(gl);
+
+
+
 
     }
 
@@ -114,12 +147,24 @@ public class PresentSigns {
         signVect=vect;
     }
 
+
     public void drawSigns()
     {
         actSignIndex=0;
         for (Integer num:signVect)
         {
             drawSingleSign(num);
+            actSignIndex++;
+
+        }
+    }
+
+    public void drawSigns(GL10 gl)
+    {
+        actSignIndex=0;
+        for (Integer num:signVect)
+        {
+            drawSingleSign(num,gl);
             actSignIndex++;
 
         }

@@ -57,6 +57,7 @@ public class Engine
 	public static int signSpriteSize = 2;
 
 	public static PresentSigns ps;
+	public static Vector<Integer> vect;
 
 }
 
