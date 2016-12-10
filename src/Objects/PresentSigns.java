@@ -58,7 +58,7 @@ public class PresentSigns {
 
     public Vector<Integer> genSigns()
     {
-        Vector<Integer> vect = new Vector<>();
+        Vector<Integer> vect = new Vector<Integer>();
 
         int signsNumber = rand.nextInt(Engine.signsMaxNumber)+1;
         System.out.println(signsNumber);
