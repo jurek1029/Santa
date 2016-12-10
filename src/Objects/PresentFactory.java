@@ -76,7 +76,7 @@ public class PresentFactory {
         {
             Matrix.setIdentityM(GLES2Renderer.mModelMatrix,0);
             Matrix.translateM(GLES2Renderer.mModelMatrix,0,p.x,p.y,0);
-            Matrix.scaleM(GLES2Renderer.mModelMatrix,0,p.size,p.size,1);
+            Matrix.scaleM(GLES2Renderer.mModelMatrix,0,p.width,p.height,1);
             Matrix.rotateM(GLES2Renderer.mModelMatrix,0,p.rotationAngle,0,0,1);
             Matrix.translateM(GLES2Renderer.mModelMatrix,0,-0.5f,-0.5f,0);
 
@@ -101,7 +101,7 @@ public class PresentFactory {
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
             gl.glTranslatef(p.x, p.y, 0);
-            gl.glScalef(p.size, p.size, 1);
+            gl.glScalef(p.width, p.height, 1);
             gl.glRotatef(p.rotationAngle, 0,0,1);
             gl.glTranslatef(-0.5f,-0.5f, 0f);
 

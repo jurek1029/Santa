@@ -29,12 +29,14 @@ public class PresentSigns {
 
     private class Shape extends Object
     {
-        float size;
+        float width;
+        float height;
         float textureScale;
 
         Shape() {
         super();
-            size= Engine.signSize;
+            width= Engine.signSize;
+            height = Engine.signSize*Engine.width/Engine.height;
             textureScale= 1f/Engine.signSpriteSize;
         }
     }
@@ -75,8 +77,9 @@ public class PresentSigns {
     private void setSignPos()
     {
         float x,y;
+
         float all = signVect.size();
-        x=actPresentX + actPresentWidth/2 + shape.size*(actSignIndex-all/2);
+        x=actPresentX + actPresentWidth/2 + shape.width*(actSignIndex-all/2);
         y=actPresentY +actPresentHeight + Engine.signGapAbovePresent;
 
         shape.x=x;
@@ -94,7 +97,7 @@ public class PresentSigns {
         //scale and set pos
         Matrix.setIdentityM(GLES2Renderer.mModelMatrix, 0);
         Matrix.translateM(GLES2Renderer.mModelMatrix,0,shape.x, shape.y,0);
-        Matrix.scaleM(GLES2Renderer.mModelMatrix,0,shape.size,shape.size,1);
+        Matrix.scaleM(GLES2Renderer.mModelMatrix,0,shape.width,shape.height,1);
 
 
         //settexture
@@ -125,7 +128,7 @@ public class PresentSigns {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(shape.x,shape.y, 0);
-        gl.glScalef(shape.size, shape.size, 1);
+        gl.glScalef(shape.width, shape.height, 1);
 
         gl.glMatrixMode(GL10.GL_TEXTURE);
         gl.glLoadIdentity();
@@ -133,9 +136,6 @@ public class PresentSigns {
         gl.glTranslatef(textureXpos, textureYpos, 0);
 
         shape.draw(gl);
-
-
-
 
     }
 
@@ -152,8 +152,8 @@ public class PresentSigns {
     {
         actPresentX=p.x;
         actPresentY=p.y;
-        actPresentHeight=p.size;
-        actPresentWidth=p.size;
+        actPresentHeight=p.width;
+        actPresentWidth=p.height;
         signVect=p.signs;
     }
 
@@ -166,7 +166,6 @@ public class PresentSigns {
         {
             drawSingleSign(num);
             actSignIndex++;
-
         }
     }
 

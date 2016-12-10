@@ -10,7 +10,8 @@ import santa.v1.Engine;
 
 public class Present extends Object {
 
-    float size;
+    float width;
+    float height;
     int type;
     float textureXpos;
     float textureYpos;
@@ -22,7 +23,8 @@ public class Present extends Object {
     {
         this.x = x;
         this.y = y;
-        this.size = size;
+        this.width = size;
+        this.height = size*Engine.width/Engine.height;
         textureXpos = type%Engine.presentSpriteSize;
         textureYpos = type/Engine.presentSpriteSize;
         textureScale = 1f/Engine.presentSpriteSize;

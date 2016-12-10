@@ -63,16 +63,16 @@ public class Engine
 //PresentSigns
 	public static int signsMaxNumber = 6;
 	public static float signSize = 0.05f;
-	public static float signGapAbovePresent = 0.001f;
+	public static float signGapAbovePresent = 0f;
 	public static int signSpriteSize = 2;
 
 	public static PresentSigns ps;
 	public static Vector<Integer> vect;
 
 //Presents
-	public static float presentNormalSize = 0.1f;
-	public static float presentMinSize = 0.05f;
-	public static float presentMaxSize = 0.1f;
+
+	public static float presentMinSize = 0.1f;
+	public static float presentMaxSize = 0.2f;
 	public static int presentSpriteSize = 2;
 	public static int presentTypeQuantity = 4;
 
