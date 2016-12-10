@@ -71,8 +71,8 @@ public class SantaActivity extends Activity {
         Engine.ctx = this.getApplicationContext();
         final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 	    final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
-	    //supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;
-		supportsEs2=false;
+	    supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;
+		//supportsEs2=false;
 
 		display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();

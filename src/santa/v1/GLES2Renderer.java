@@ -75,8 +75,6 @@ public class GLES2Renderer implements Renderer
 	    	getLocations(mProgramLineHandle);
 	    	Matrix.setIdentityM(mModelMatrix, 0); 
 	    	Engine.line.draw();
-
-
 		}
 		
 		GLES20.glUseProgram(mProgramHandle); 	
