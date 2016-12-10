@@ -1,4 +1,4 @@
-package santa.v1;
+package Objects;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -10,6 +10,11 @@ import javax.microedition.khronos.opengles.GL10;
 import android.annotation.SuppressLint;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+
+import santa.v1.Engine;
+import santa.v1.GLES2Renderer;
+import santa.v1.Graphic;
+import santa.v1.SantaActivity;
 
 
 public class Object {

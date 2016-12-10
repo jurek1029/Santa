@@ -1,8 +1,11 @@
-package santa.v1;
+package Objects;
 
 import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import santa.v1.Engine;
+import santa.v1.Graphic;
 
 public class Snow 
 {

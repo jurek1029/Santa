@@ -6,6 +6,11 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
+import Objects.Object;
+import Objects.Line;
+import Objects.PresentFactory;
+import Objects.PresentSigns;
+
 public class GameView extends GLSurfaceView 
 {
 	
@@ -51,9 +56,10 @@ public class GameView extends GLSurfaceView
 		Engine.ObjTab[0] = new Object(R.drawable.statek);
 
 		Engine.ps = new PresentSigns(R.drawable.signs);
-		Engine.vect = Engine.ps.genSigns();
-		Engine.ps.setPresentParam(0.5f,0.5f,0f,0f,Engine.vect);
+		Engine.pf = new PresentFactory(R.drawable.presents);
 		Engine.line = new Line();
+
+		Engine.pf.spawnPresent(0.5f,0.5f);
 	}
 	public void load(GL10 gl)
 	{
@@ -61,8 +67,10 @@ public class GameView extends GLSurfaceView
 		Engine.line = new Line();
 
 		Engine.ps = new PresentSigns(R.drawable.signs,gl);
-		Engine.vect = Engine.ps.genSigns();
-		Engine.ps.setPresentParam(0.5f,0.5f,0f,0f,Engine.vect);
+		Engine.pf = new PresentFactory(R.drawable.presents,gl);
+
+		Engine.pf.spawnPresent(0.5f,0.5f);
+
 	}
 	
 	@Override

@@ -3,9 +3,11 @@ package santa.v1;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import android.media.JetPlayer.OnJetEventListener;
 import android.opengl.GLU;
 import android.opengl.GLSurfaceView.Renderer;
+
+import Objects.Snow;
+import Objects.Object;
 
 public class MenuRenderer implements Renderer{
 

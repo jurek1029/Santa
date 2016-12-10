@@ -71,7 +71,8 @@ public class SantaActivity extends Activity {
         Engine.ctx = this.getApplicationContext();
         final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 	    final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
-	    supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;
+	    //supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;
+		supportsEs2=false;
 
 		display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
@@ -132,7 +133,7 @@ public class SantaActivity extends Activity {
 					Engine.pLine.removeAllElements();
 					Engine.update = false;
 
-					removeShapeIfPossiblle();
+					Engine.pf.checkSigns();
 				}
 				break;
 			}
@@ -159,20 +160,7 @@ public class SantaActivity extends Activity {
     	else return nsMin.shape;	
     }
 
-	public void removeShapeIfPossiblle()
-	{
 
-		if (Engine.vect.firstElement()==Engine.currentShape.ordinal())
-		{
-			Engine.vect.remove(0);
-			if (Engine.vect.isEmpty())
-			{
-				Engine.vect = Engine.ps.genSigns();
-				Engine.ps.setPresentParam(0.5f,0.5f,0f,0f,Engine.vect);
-			}
-		}
-	}
-    
     @Override
     public void onBackPressed() 
     {

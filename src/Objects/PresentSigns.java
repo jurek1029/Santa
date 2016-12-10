@@ -1,14 +1,20 @@
-package santa.v1;
+package Objects;
 
 /**
  * Created by Przemek on 07.12.2016.
  */
+import java.lang.*;
 import java.util.Random;
 import java.util.Vector;
 
 import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+
+import santa.v1.Engine;
+import santa.v1.GLES2Renderer;
+import santa.v1.Graphic;
+import santa.v1.SantaActivity;
 
 public class PresentSigns {
 
@@ -28,7 +34,7 @@ public class PresentSigns {
 
         Shape() {
         super();
-            size=Engine.signSize;
+            size= Engine.signSize;
             textureScale= 1f/Engine.signSpriteSize;
         }
     }
@@ -115,22 +121,17 @@ public class PresentSigns {
 
         //TODO
         //set matrixes for GL10
-        /*
 
-        gl.glPushMatrix();
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(shape.x,shape.y, 0);
         gl.glScalef(shape.size, shape.size, 1);
-        gl.glTranslatef(-.5f, -.5f, 0);
 
         gl.glMatrixMode(GL10.GL_TEXTURE);
         gl.glLoadIdentity();
         gl.glScalef(shape.textureScale, shape.textureScale,1);
         gl.glTranslatef(textureXpos, textureYpos, 0);
 
-        gl.glMatrixMode(GL10.GL_MODELVIEW);
-        */
         shape.draw(gl);
 
 
@@ -147,9 +148,19 @@ public class PresentSigns {
         signVect=vect;
     }
 
-
-    public void drawSigns()
+    public void setPresent(Present p)
     {
+        actPresentX=p.x;
+        actPresentY=p.y;
+        actPresentHeight=p.size;
+        actPresentWidth=p.size;
+        signVect=p.signs;
+    }
+
+
+    public void drawSigns(Present p)
+    {
+        setPresent(p);
         actSignIndex=0;
         for (Integer num:signVect)
         {
@@ -159,8 +170,10 @@ public class PresentSigns {
         }
     }
 
-    public void drawSigns(GL10 gl)
+    public void drawSigns(Present p,GL10 gl)
     {
+
+        setPresent(p);
         actSignIndex=0;
         for (Integer num:signVect)
         {

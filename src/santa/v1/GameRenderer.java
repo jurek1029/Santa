@@ -45,7 +45,7 @@ public class GameRenderer implements Renderer
 		}
 		//Engine.ObjTab[0].draw(gl);
 
-		Engine.ps.drawSigns(gl);
+		Engine.pf.drawPresents(gl);
 		
 		loopEnd = System.currentTimeMillis();
 		loopRunTime = (loopEnd-loopStart);
@@ -58,9 +58,9 @@ public class GameRenderer implements Renderer
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glLoadIdentity();
 		gl.glOrthof( -.5f, .5f, -.5f, .5f, .1f, 100f);
+		GLU.gluLookAt(gl, 0.5f, 0.5f, 1, 0.5f, 0.5f, 0, 0, 1, 0);
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
-		GLU.gluLookAt(gl, 0.5f, 0.5f, 1, 0.5f, 0.5f, 0, 0, 1, 0);
 		gl.glPushMatrix();
 	}
 

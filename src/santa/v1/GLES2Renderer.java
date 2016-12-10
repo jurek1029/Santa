@@ -97,7 +97,7 @@ public class GLES2Renderer implements Renderer
 		Engine.ObjTab[0].draw(); 	
 		
 		*/
-		Engine.ps.drawSigns();
+		Engine.pf.drawPresents();
     	
 		loopEnd = System.currentTimeMillis();
 		loopRunTime = (loopEnd-loopStart);

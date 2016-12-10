@@ -1,5 +1,6 @@
-package santa.v1;
+package Objects;
 
+import java.lang.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Vector;
@@ -10,6 +11,9 @@ import android.annotation.SuppressLint;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Pair;
+
+import santa.v1.Engine;
+import santa.v1.GLES2Renderer;
 
 public class Line extends Object {
 
@@ -24,7 +28,7 @@ public class Line extends Object {
 		int i=0;
 		for(Pair<Float,Float> p : pLine)
 		{
-			vertices[i++] = p.first/Engine.width;
+			vertices[i++] = p.first/ Engine.width;
 			vertices[i++] = p.second/Engine.height;
 			vertices[i++] = 0.0f;
 		}

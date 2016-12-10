@@ -1,6 +1,9 @@
-package santa.v1;
+package Objects;
 
+import java.lang.*;
 import java.util.Random;
+
+import santa.v1.Engine;
 
 public class SnowFlake extends Object
 {	
