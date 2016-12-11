@@ -6,6 +6,7 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
+import Objects.ConveyorBelt;
 import Objects.Object;
 import Objects.Line;
 import Objects.PresentFactory;
@@ -15,8 +16,10 @@ public class GameView extends GLSurfaceView
 {
 	
 	public GLES2Renderer renderer;
-	public GameView(Context context) {
-		super(context);
+	Context context;
+	public GameView(Context _context) {
+		super(_context);
+		context = _context;
 		if (SantaActivity.supportsEs2)
 		{
 	    	System.out.println("supports GLES2.0");
@@ -33,9 +36,10 @@ public class GameView extends GLSurfaceView
 		
 	}
 	
-	public GameView(Context context, AttributeSet attrs)
+	public GameView(Context _context, AttributeSet attrs)
 	{	
-		super(context, attrs);
+		super(_context, attrs);
+		context = _context;
 		if (SantaActivity.supportsEs2)
 	    {
 	    	System.out.println("supports GLES2.0");
@@ -59,7 +63,10 @@ public class GameView extends GLSurfaceView
 		Engine.pf = new PresentFactory(R.drawable.presents);
 		Engine.line = new Line();
 
+		Engine.PCSpriteHandle = Graphic.loadTextureGLES2(context, Engine.PCSpriteTexture);
 		Engine.pf.spawnPresent(0.5f,0.5f);
+		
+		Engine.Ctest = new ConveyorBelt(.5f, .5f, 5f, 1f);
 	}
 	public void load(GL10 gl)
 	{
@@ -69,7 +76,10 @@ public class GameView extends GLSurfaceView
 		Engine.ps = new PresentSigns(R.drawable.signs,gl);
 		Engine.pf = new PresentFactory(R.drawable.presents,gl);
 
+		Engine.PCSpriteHandle = Graphic.loadTextureGLES1(context, Engine.PCSpriteTexture, gl);
 		Engine.pf.spawnPresent(0.5f,0.5f);
+		
+		Engine.Ctest = new ConveyorBelt(.5f, .5f, 3f, 1f);
 
 	}
 	

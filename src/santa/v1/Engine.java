@@ -2,6 +2,7 @@ package santa.v1;
 
 import java.util.Vector;
 
+import Objects.ConveyorBelt;
 import Objects.PresentFactory;
 import Objects.PresentSigns;
 import Objects.Snow;
@@ -70,14 +71,18 @@ public class Engine
 	public static Vector<Integer> vect;
 
 //Presents
-
+	public static int PCSpriteTexture = R.drawable.conveyor_sprite;
+	public static int PCSpriteHandle;
 	public static float presentMinSize = 0.1f;
 	public static float presentMaxSize = 0.2f;
 	public static int presentSpriteSize = 2;
 	public static int presentTypeQuantity = 4;
 
 	public static PresentFactory pf;
-
+	
+//ConveyorBelt
+	public static ConveyorBelt Ctest;
+	public static float ConveyorBeltScale = 10f;
 }
 
 
