@@ -64,7 +64,7 @@ public class Engine
 //PresentSigns
 	public static int signsMaxNumber = 6;
 	public static float signSize = 0.05f;
-	public static float signGapAbovePresent = 0f;
+	public static float signGapAbovePresent = 0.01f;
 	public static int signSpriteSize = 2;
 
 	public static PresentSigns ps;

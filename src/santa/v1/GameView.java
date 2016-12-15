@@ -60,13 +60,13 @@ public class GameView extends GLSurfaceView
 		Engine.ObjTab[0] = new Object(R.drawable.statek);
 
 		Engine.ps = new PresentSigns(R.drawable.signs);
-		Engine.pf = new PresentFactory(R.drawable.presents);
+		Engine.pf = new PresentFactory();
 		Engine.line = new Line();
 
 		Engine.PCSpriteHandle = Graphic.loadTextureGLES2(context, Engine.PCSpriteTexture);
 		Engine.pf.spawnPresent(0.5f,0.5f);
 		
-		Engine.Ctest = new ConveyorBelt(.5f, .5f, 5f, 1f);
+		Engine.Ctest = new ConveyorBelt(0.5f, 0.5f, 2f, 1f);
 	}
 	public void load(GL10 gl)
 	{
@@ -79,7 +79,7 @@ public class GameView extends GLSurfaceView
 		Engine.PCSpriteHandle = Graphic.loadTextureGLES1(context, Engine.PCSpriteTexture, gl);
 		Engine.pf.spawnPresent(0.5f,0.5f);
 		
-		Engine.Ctest = new ConveyorBelt(.5f, .5f, 3f, 1f);
+		Engine.Ctest = new ConveyorBelt(.5f, .5f, 5f, 1f);
 
 	}
 	
