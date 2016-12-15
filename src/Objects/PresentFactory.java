@@ -70,12 +70,15 @@ public class PresentFactory {
     public void checkSigns()
     {
         if (Engine.currentShape== Engine.shape.NULL) return;
-        for (Present p:vect)
-        {
-            if (p.signs.size()==0) return;
-            if (p.signs.firstElement()==Engine.currentShape.ordinal())
-                p.signs.remove(0);
-        }
+
+
+            for (Present p : vect) {
+                synchronized (vect) {
+                if (p.signs.size() == 0) return;
+                if (p.signs.firstElement() == Engine.currentShape.ordinal())
+                    p.signs.remove(0);
+            }
+            }
     }
 
     public void drawPresents()

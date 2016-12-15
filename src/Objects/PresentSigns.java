@@ -158,11 +158,12 @@ public class PresentSigns {
     public void drawSigns(Present p)
     {
         setPresent(p);
-        actSignIndex=0;
-        for (Integer num:signVect)
-        {
-            drawSingleSign(num);
-            actSignIndex++;
+        synchronized (signVect) {
+            actSignIndex = 0;
+            for (Integer num : signVect) {
+                drawSingleSign(num);
+                actSignIndex++;
+            }
         }
     }
 
