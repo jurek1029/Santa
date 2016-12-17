@@ -7,6 +7,7 @@ package Objects;
 import java.util.Vector;
 
 import santa.v1.Engine;
+import santa.v1.SantaActivity;
 
 public class Present extends Object {
 
@@ -16,25 +17,29 @@ public class Present extends Object {
     float textureXpos;
     float textureYpos;
     float textureScale;
+
     Vector<Integer> signs;
     public float rotationFull90;
     public int lastCollision;
     public float rotationAngle;
     public float Vy = 0;
 
-    public Present(float x, float y, float size,int type, int texture)
+    public Present(float x, float y, float size,int type,int textureH)
     {
         this.x = x;
         this.y = y;
         this.width = size;
         this.height = size*Engine.width/Engine.height;
-        textureXpos = type%Engine.presentSpriteSize;
-        textureYpos = type/Engine.presentSpriteSize;
-        textureScale = 1f/Engine.presentSpriteSize;
-        textureHandle = texture;
+
+        textureHandle = textureH;
         rotationAngle = 0;
         rotationFull90 = 0;
         lastCollision =0;
+
+        this.texture = new float[]{0f,.5f,.5f,.5f,.5f,1f,0f,1f};
+        allocate();
+        if(SantaActivity.supportsEs2)
+            allocateGLES2();
 
         signs = Engine.ps.genSigns();
     }

@@ -60,14 +60,14 @@ public class GameView extends GLSurfaceView
 	public void load()
 	{
 		Engine.ObjTab[0] = new Object(R.drawable.wood,new float[]{0,0,1,0,1,(float)Engine.height/Engine.width,0,(float)Engine.height/Engine.width});
-
-		Engine.ps = new PresentSigns(R.drawable.signs);
-		Engine.pf = new PresentFactory(R.drawable.presents);
-		Engine.line = new Line();
-
-		Engine.PCSpriteHandle = Graphic.loadTextureGLES2(context, Engine.PCSpriteTexture);
-		Engine.pf.spawnPresent(.8f,1f);
 		
+		Engine.PCSpriteHandle = Graphic.loadTextureGLES2(context, Engine.PCSpriteTexture);
+		Engine.ps = new PresentSigns(R.drawable.signs);
+		Engine.pf = new PresentFactory();
+		Engine.line = new Line();
+		
+		Engine.pf.spawnPresent(.8f,1f);
+	
 		Engine.vCBelt = new Vector<ConveyorBelt>();
 		Engine.vCBelt.add(new ConveyorBelt(0, .75f  , 6, .1f));
 		Engine.vCBelt.add(new ConveyorBelt(1, .75f , 6, -.1f));
@@ -79,11 +79,11 @@ public class GameView extends GLSurfaceView
 	{
 		Engine.ObjTab[0] = new Object(R.drawable.wood,new float[]{0,0,1,0,1,(float)Engine.height/Engine.width,0,(float)Engine.height/Engine.width},gl);
 		Engine.line = new Line();
-
+		
+		Engine.PCSpriteHandle = Graphic.loadTextureGLES1(context, Engine.PCSpriteTexture, gl);
 		Engine.ps = new PresentSigns(R.drawable.signs,gl);
 		Engine.pf = new PresentFactory(R.drawable.presents,gl);
-
-		Engine.PCSpriteHandle = Graphic.loadTextureGLES1(context, Engine.PCSpriteTexture, gl);
+		
 		Engine.pf.spawnPresent(0.5f,0.8f);
 		
 		Engine.vCBelt = new Vector<ConveyorBelt>();

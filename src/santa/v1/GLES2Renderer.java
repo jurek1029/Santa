@@ -7,13 +7,11 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import Objects.ConveyorBelt;
-import Objects.Present;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.opengl.GLSurfaceView.Renderer;
-import android.renderscript.Matrix2f;
 import android.util.Pair;
 
 public class GLES2Renderer implements Renderer

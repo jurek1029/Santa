@@ -63,11 +63,9 @@ public class PresentSigns {
         Vector<Integer> vect = new Vector<Integer>();
 
         int signsNumber = rand.nextInt(Engine.signsMaxNumber)+1;
-        System.out.println(signsNumber);
         for (int i=0; i<signsNumber; i++)
         {
             int n= rand.nextInt(Engine.shapes.size());
-            System.out.println(n);
             vect.add(n);
         }
 
@@ -98,7 +96,6 @@ public class PresentSigns {
         Matrix.setIdentityM(GLES2Renderer.mModelMatrix, 0);
         Matrix.translateM(GLES2Renderer.mModelMatrix,0,shape.x, shape.y,0);
         Matrix.scaleM(GLES2Renderer.mModelMatrix,0,shape.width,shape.height,1);
-
 
         //settexture
         Matrix.setIdentityM(GLES2Renderer.mTextureMatrix, 0);
@@ -152,8 +149,8 @@ public class PresentSigns {
     {
         actPresentX=p.x;
         actPresentY=p.y;
-        actPresentHeight=p.width;
-        actPresentWidth=p.height;
+        actPresentHeight=p.height;
+        actPresentWidth=p.width;
         signVect=p.signs;
     }
 
@@ -161,11 +158,12 @@ public class PresentSigns {
     public void drawSigns(Present p)
     {
         setPresent(p);
-        actSignIndex=0;
-        for (Integer num:signVect)
-        {
-            drawSingleSign(num);
-            actSignIndex++;
+        synchronized (signVect) {
+            actSignIndex = 0;
+            for (Integer num : signVect) {
+                drawSingleSign(num);
+                actSignIndex++;
+            }
         }
     }
 
