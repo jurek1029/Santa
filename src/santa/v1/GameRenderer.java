@@ -5,6 +5,7 @@ import java.util.Vector;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import Objects.ConveyorBelt;
 import android.opengl.GLU;
 import android.opengl.GLSurfaceView.Renderer;
 import android.util.Pair;
@@ -32,20 +33,29 @@ public class GameRenderer implements Renderer
 		}
 		
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-		//gl.glLoadIdentity();
+		
+		Engine.gravity(loopRunTime);
+		
+		gl.glLoadIdentity();
+		gl.glMatrixMode(GL10.GL_TEXTURE);
+		gl.glLoadIdentity();
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		Engine.ObjTab[0].draw(gl);
 
-		//GLU.gluLookAt(gl, 0.5f, 0.5f, 1, 0.5f, 0.5f, 0, 0, 1, 0);
+		for(ConveyorBelt cb : Engine.vCBelt)
+    		cb.draw(gl);
+		
+		//Engine.pf.drawPresents(gl); TWOJ PREZENT COS PSUJE 
+		
 		if(Engine.update)
 		{
 			Engine.line.updateVertices((Vector<Pair<Float, Float>>) Engine.pLine.clone());
-			gl.glColor4f(1, 1, 0, 1);
+			gl.glColor4f(0,0, 0, 1f);
 			gl.glLineWidth(10f);
 	    	Engine.line.draw(gl);
 	    	gl.glColor4f(1, 1, 1, 1);
 		}
-		//Engine.ObjTab[0].draw(gl);
-
-		Engine.pf.drawPresents(gl);
+		
 		
 		loopEnd = System.currentTimeMillis();
 		loopRunTime = (loopEnd-loopStart);
@@ -73,6 +83,7 @@ public class GameRenderer implements Renderer
 		gl.glClearColor(66f/255f, 134f/255f, 244f/255f, 1f);
 	    gl.glEnable(GL10.GL_CULL_FACE);
 		gl.glEnable(GL10.GL_DEPTH_TEST);
+		gl.glDepthFunc(GL10.GL_LEQUAL);
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		

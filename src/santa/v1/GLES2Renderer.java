@@ -1,15 +1,19 @@
 package santa.v1;
 
+import java.security.acl.LastOwnerException;
 import java.util.Vector;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import Objects.ConveyorBelt;
+import Objects.Present;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.opengl.GLSurfaceView.Renderer;
+import android.renderscript.Matrix2f;
 import android.util.Pair;
 
 public class GLES2Renderer implements Renderer
@@ -43,6 +47,7 @@ public class GLES2Renderer implements Renderer
 	public static final float[] mLightPosInEyeSpace = new float[4];
 	
 	private int mProgramHandle;
+	private int mProgramPercentHandle;
 	private int mProgramLineHandle;
 	
 	private long loopStart = 0;
@@ -66,9 +71,26 @@ public class GLES2Renderer implements Renderer
 			e.printStackTrace();
 		}
 		
-		GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
+		GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);				
 		
-		if(Engine.update)
+		Engine.gravity(loopRunTime);
+		
+		GLES20.glUseProgram(mProgramHandle); 	
+    	getLocations(mProgramHandle);
+
+    	Matrix.setIdentityM(mModelMatrix, 0); 
+        Matrix.setIdentityM(mTextureMatrix, 0);
+    	GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, Engine.ObjTab[0].textureHandle);
+      	GLES20.glUniform1i(mTextureUniformHandle, 0);
+    	Engine.ObjTab[0].draw();   	
+    	
+    	for(ConveyorBelt cb : Engine.vCBelt)
+    		cb.draw();
+    	
+    	Engine.pf.drawPresents();
+    	
+    	if(Engine.update)
 		{
 			Engine.line.updateVertices((Vector<Pair<Float, Float>>) Engine.pLine.clone());
 			GLES20.glUseProgram(mProgramLineHandle); 	
@@ -76,28 +98,6 @@ public class GLES2Renderer implements Renderer
 	    	Matrix.setIdentityM(mModelMatrix, 0); 
 	    	Engine.line.draw();
 		}
-		
-		GLES20.glUseProgram(mProgramHandle); 	
-    	getLocations(mProgramHandle);
-    /*
-        Matrix.setIdentityM(mModelMatrix, 0); 
-        Matrix.setIdentityM(mTextureMatrix, 0);
-        Matrix.translateM(mTextureMatrix, 0, 0, 0.5f, 0);
-        
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, Engine.ObjTab[0].textureHandle);
-      	GLES20.glUniform1i(mTextureUniformHandle, 0);
-      	GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
-      	GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mWrapTextureHandle);     	
-      	GLES20.glUniform1i(mWrapTextureUniformHandle, 1);
-      	GLES20.glUniform1f(mProcentHandle, .5f);
-        
-		Engine.ObjTab[0].draw(); 	
-		
-		*/
-    	Engine.Ctest.draw();
-		Engine.pf.drawPresents();
-		
     	
 		loopEnd = System.currentTimeMillis();
 		loopRunTime = (loopEnd-loopStart);
@@ -106,6 +106,22 @@ public class GLES2Renderer implements Renderer
 	private void getLocations(int program)
 	{
 		if(program == mProgramHandle)
+		{
+			mMVPMatrixHandle = GLES20.glGetUniformLocation(program, "u_MVPMatrix");
+			mMVMatrixHandle = GLES20.glGetUniformLocation(program, "u_MVMatrix"); 
+			mLightPosHandle = GLES20.glGetUniformLocation(program, "u_LightPos");
+			mTextureUniformHandle = GLES20.glGetUniformLocation(program, "u_Texture");
+			mPositionHandle = GLES20.glGetAttribLocation(program, "a_Position");
+			mTextureCoordinateHandle = GLES20.glGetAttribLocation(program, "a_TexCoordinate");		
+			mTextureMatrixHandle = GLES20.glGetUniformLocation(program, "u_TextureMatrix");
+			
+			Matrix.setIdentityM(mLightModelMatrix, 0);
+			Matrix.translateM(mLightModelMatrix, 0, 0.0f, 2.0f, 6.0f);
+			       
+			Matrix.multiplyMV(mLightPosInWorldSpace, 0, mLightModelMatrix, 0, mLightPosInModelSpace, 0);
+			Matrix.multiplyMV(mLightPosInEyeSpace, 0, mViewMatrix, 0, mLightPosInWorldSpace, 0);    
+		}
+		else if(program == mProgramPercentHandle)
 		{
 			mMVPMatrixHandle = GLES20.glGetUniformLocation(program, "u_MVPMatrix");
 			mMVMatrixHandle = GLES20.glGetUniformLocation(program, "u_MVMatrix"); 
@@ -148,6 +164,7 @@ public class GLES2Renderer implements Renderer
 		GLES20.glClearColor(66f/255f, 134f/255f, 244f/255f, 1f);
 	    GLES20.glEnable(GLES20.GL_CULL_FACE);
 		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+		GLES20.glDepthFunc( GLES20.GL_LEQUAL );
 		GLES20.glEnable(GLES20.GL_BLEND);
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 	    final float eyeX = 0.5f;
@@ -162,7 +179,7 @@ public class GLES2Renderer implements Renderer
 	    Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
 	    
 	    String vertexShader = RawResourceReader.readTextFileFromRawResource(mActivityContext, R.raw.per_pixel_vertex_shader_no_normals);
- 		String fragmentShader = RawResourceReader.readTextFileFromRawResource(mActivityContext, R.raw.per_pixel_fragment_shader_procent);		
+ 		String fragmentShader = RawResourceReader.readTextFileFromRawResource(mActivityContext, R.raw.per_pixel_fragment_shader_no_normals);		
 		
 		int vertexShaderHandle = Graphic.compileShader(GLES20.GL_VERTEX_SHADER, vertexShader);		
 		int fragmentShaderHandle = Graphic.compileShader(GLES20.GL_FRAGMENT_SHADER, fragmentShader);		
@@ -170,6 +187,12 @@ public class GLES2Renderer implements Renderer
 		mProgramHandle = Graphic.createAndLinkProgram(vertexShaderHandle, fragmentShaderHandle, 
 				new String[] {"a_Position", "a_TexCoordinate"});				
         
+		fragmentShader = RawResourceReader.readTextFileFromRawResource(mActivityContext, R.raw.per_pixel_fragment_shader_procent);		
+		fragmentShaderHandle = Graphic.compileShader(GLES20.GL_FRAGMENT_SHADER, fragmentShader);
+		
+		mProgramPercentHandle = Graphic.createAndLinkProgram(vertexShaderHandle, fragmentShaderHandle, 
+				new String[] {"a_Position", "a_TexCoordinate"});	
+		
 		vertexShader = RawResourceReader.readTextFileFromRawResource(mActivityContext, R.raw.line_vertex_shader);
 		fragmentShader = RawResourceReader.readTextFileFromRawResource(mActivityContext, R.raw.line_fragment_shader);		
 		

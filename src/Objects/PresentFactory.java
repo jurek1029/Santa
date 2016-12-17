@@ -20,7 +20,7 @@ import santa.v1.SantaActivity;
 public class PresentFactory {
 
     int textureHandle;
-    Vector<Present> vect;
+    public Vector<Present> vect; //wolalbym to miec w engine 
     Random rand;
 
     public PresentFactory(int texture) {
@@ -77,6 +77,7 @@ public class PresentFactory {
             Matrix.setIdentityM(GLES2Renderer.mModelMatrix,0);
             Matrix.translateM(GLES2Renderer.mModelMatrix,0,p.x,p.y,0);
             Matrix.scaleM(GLES2Renderer.mModelMatrix,0,p.width,p.height,1);
+            Matrix.translateM(GLES2Renderer.mModelMatrix,0,0.5f,0.5f,0); // tu ci zmienilem bo tak powinno byæ
             Matrix.rotateM(GLES2Renderer.mModelMatrix,0,p.rotationAngle,0,0,1);
             Matrix.translateM(GLES2Renderer.mModelMatrix,0,-0.5f,-0.5f,0);
 

@@ -62,14 +62,25 @@ public class Object {
 		allocate();
 		if(SantaActivity.supportsEs2)allocateGLES2();
 	}
-	public Object(int texture, GL10 gl)
+	public Object(int texture, GL10 gl)//zakladam ze jak ktos urzywa tej funkcji to raczej tylko do gl10
 	{
-		if(SantaActivity.supportsEs2)
-			textureHandle = Graphic.loadTextureGLES2(Engine.ctx, texture);
-		else
-			textureHandle = Graphic.loadTextureGLES1(Engine.ctx, texture, gl);
+		textureHandle = Graphic.loadTextureGLES1(Engine.ctx, texture, gl);
+		allocate();
+	}
+	
+	public Object(int texture, float[] _texture)
+	{
+		this(texture);
+		this.texture = _texture;		
 		allocate();
 		if(SantaActivity.supportsEs2)allocateGLES2();
+	}
+	
+	public Object(int texture, float[] _texture, GL10  gl)
+	{
+		this(texture,gl);
+		this.texture = _texture;		
+		allocate();
 	}
 	
 	public void allocateGLES2()
