@@ -16,6 +16,7 @@ import android.graphics.Movie;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Pair;
@@ -33,6 +34,8 @@ public class SantaActivity extends Activity {
 	Display display;
 	int c;
 	float x,y;
+	boolean sound=true;
+	MediaPlayer mp;
 	// temp
 	TextView tv;
 	//Movie m;
@@ -54,6 +57,7 @@ public class SantaActivity extends Activity {
         title.bringToFront();
         
         ImageButton imgbnt = (ImageButton)findViewById(R.id.StartButton);
+
         imgbnt.setOnClickListener(new View.OnClickListener() {	
 			@Override
 			public void onClick(View arg0) 
@@ -63,7 +67,14 @@ public class SantaActivity extends Activity {
 		        gameView = (GameView)findViewById(R.id.gl_surface_view);
 			}
 		});
+
+		mp = MediaPlayer.create(this,R.raw.music);
+		mp.setLooping(true);
+		mp.start();
+
+		setSound();
         imgbnt.bringToFront();
+
         
         
         
@@ -173,8 +184,10 @@ public class SantaActivity extends Activity {
             Typeface font = Typeface.createFromAsset(getAssets(), "candcu_font.ttf");
             title.setTypeface(font);
             
-            title.bringToFront();          
-            
+            title.bringToFront();
+
+
+            setSound();
             ImageButton imgbnt = (ImageButton)findViewById(R.id.StartButton);
             imgbnt.setOnClickListener(new View.OnClickListener() {	
     			@Override
@@ -207,6 +220,30 @@ public class SantaActivity extends Activity {
 		super.onPause();
 		if(Engine.inGame)
 			gameView.onPause();
+	}
+
+	private void setSound()
+	{
+		final ImageButton soundButton = (ImageButton)findViewById(R.id.soundButton);
+		soundButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				sound=!sound;
+
+				if (sound)
+				{
+					soundButton.setBackgroundResource(R.drawable.sound_on);
+					mp.start();
+				}
+				else
+				{
+					soundButton.setBackgroundResource(R.drawable.sound_off);
+					mp.pause();
+				}
+			}
+		});
+		soundButton.bringToFront();
 	}
 
 }

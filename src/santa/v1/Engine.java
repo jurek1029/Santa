@@ -9,6 +9,7 @@ import Objects.PresentSigns;
 import Objects.Snow;
 import Objects.Line;
 import Objects.Object;
+import Objects.SpawnLocation;
 import Shapes.*;
 import android.content.Context;
 import android.util.Pair;
@@ -65,7 +66,7 @@ public class Engine
 //PresentSigns
 	public static int signsMaxNumber = 6;
 	public static float signSize = 0.05f;
-	public static float signGapAbovePresent = 0.01f;
+	public static float signGapAbovePresent = 0.013f;
 	public static int signSpriteSize = 2;
 
 	public static PresentSigns ps;
@@ -78,12 +79,15 @@ public class Engine
 	public static float presentMaxSize = 0.19f;
 	public static int presentSpriteSize = 2;
 	public static int presentTypeQuantity = 4;
+	public static int presentMaxQuantity = 5;
 
+	public static Vector<Present> vPresents;
 	public static PresentFactory pf;
 	
 //ConveyorBelt
 	public static Vector<ConveyorBelt> vCBelt;
 	public static float ConveyorBeltScale = 10f;
+	public static Vector<SpawnLocation>  vSpawnLocation;
 	
 // Physics 
 	public static float gravityConst = -2f;
@@ -93,7 +97,7 @@ public class Engine
 		float s = (float)(loopRunTime)/1000f;
 		
 		int collision = 0;
-		for(Present p : Engine.pf.vect)
+		for(Present p : Engine.vPresents)
 		{
 			p.Vy += Engine.gravityConst*s;
 			p.y += p.Vy*s;

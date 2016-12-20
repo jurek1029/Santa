@@ -81,11 +81,12 @@ public class GLES2Renderer implements Renderer
     	GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, Engine.ObjTab[0].textureHandle);
       	GLES20.glUniform1i(mTextureUniformHandle, 0);
-    	Engine.ObjTab[0].draw();   	
+    	Engine.ObjTab[0].draw();
     	
     	for(ConveyorBelt cb : Engine.vCBelt)
     		cb.draw();
-    	
+
+		Engine.pf.spawn();
     	Engine.pf.drawPresents();
     	
     	if(Engine.update)

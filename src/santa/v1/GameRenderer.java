@@ -36,16 +36,18 @@ public class GameRenderer implements Renderer
 		
 		Engine.gravity(loopRunTime);
 		
-		gl.glLoadIdentity();
+
 		gl.glMatrixMode(GL10.GL_TEXTURE);
 		gl.glLoadIdentity();
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
 		Engine.ObjTab[0].draw(gl);
 
 		for(ConveyorBelt cb : Engine.vCBelt)
     		cb.draw(gl);
-		
-		//Engine.pf.drawPresents(gl); TWOJ PREZENT COS PSUJE 
+
+		Engine.pf.spawn();
+		Engine.pf.drawPresents(gl); //TWOJ PREZENT COS PSUJE
 		
 		if(Engine.update)
 		{
@@ -53,7 +55,7 @@ public class GameRenderer implements Renderer
 			gl.glColor4f(0,0, 0, 1f);
 			gl.glLineWidth(10f);
 	    	Engine.line.draw(gl);
-	    	gl.glColor4f(1, 1, 1, 1);
+	  		gl.glColor4f(1, 1, 1, 1);
 		}
 		
 		

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -7,18 +9,7 @@
         android:id="@+id/menuView1"
         android:layout_width="match_parent"
    		android:layout_height="match_parent" />
-    
-    <ImageButton
-        android:id="@+id/StartButton"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom= "140dp"
-        android:background="@drawable/blank"
-        android:scaleType="fitCenter"
-        android:src="@drawable/play_button_gray" />
-       
+
 
     <TextView
         android:id="@+id/Title"
@@ -30,5 +21,30 @@
         android:text="Best Game Ever"
         android:textColor="#bf0005"
         android:textSize="60sp" />
+
+    <ImageButton
+        android:id="@+id/soundButton"
+        android:elevation="1dp"
+        android:background="@drawable/blank"
+        android:cropToPadding="false"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="false"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/sound_on" />
+
+    <ImageButton
+        android:id="@+id/StartButton"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_marginBottom= "139dp"
+        android:background="@drawable/blank"
+        android:scaleType="fitCenter"
+        android:src="@drawable/play_button_gray"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

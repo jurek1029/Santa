@@ -14,7 +14,7 @@ public class ConveyorBelt
 	public float halfLength;
 	public float x,y;
 	Object leftEnd,RightEnd,Middle;
-	
+
 	public ConveyorBelt(float _x, float _y, float length, float _speed)
 	{
 		x = _x - 1f/Engine.ConveyorBeltScale;

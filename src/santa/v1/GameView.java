@@ -7,12 +7,15 @@ import javax.microedition.khronos.opengles.GL10;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.util.Pair;
 
 import Objects.ConveyorBelt;
 import Objects.Object;
 import Objects.Line;
+import Objects.Present;
 import Objects.PresentFactory;
 import Objects.PresentSigns;
+import Objects.SpawnLocation;
 
 public class GameView extends GLSurfaceView 
 {
@@ -62,18 +65,22 @@ public class GameView extends GLSurfaceView
 		Engine.ObjTab[0] = new Object(R.drawable.wood,new float[]{0,0,1,0,1,(float)Engine.height/Engine.width,0,(float)Engine.height/Engine.width});
 		
 		Engine.PCSpriteHandle = Graphic.loadTextureGLES2(context, Engine.PCSpriteTexture);
+		Engine.vPresents = new Vector<Present>();
 		Engine.ps = new PresentSigns(R.drawable.signs);
 		Engine.pf = new PresentFactory();
 		Engine.line = new Line();
-		
-		Engine.pf.spawnPresent(.8f,1f);
-	
+		Engine.vSpawnLocation = new Vector<SpawnLocation>();
+
+
 		Engine.vCBelt = new Vector<ConveyorBelt>();
 		Engine.vCBelt.add(new ConveyorBelt(0, .75f  , 6, .1f));
 		Engine.vCBelt.add(new ConveyorBelt(1, .75f , 6, -.1f));
 		Engine.vCBelt.add(new ConveyorBelt(.5f, .55f , 2, .1f));
-		Engine.vCBelt.add(new ConveyorBelt(0, .35f , 5, .03f));
+		Engine.vCBelt.add(new ConveyorBelt(0, .35f , 4, 0.05f));
 		Engine.vCBelt.add(new ConveyorBelt(1, .15f , 8, -.1f));
+
+		Engine.pf.getSpawnLocations();
+
 	}
 	public void load(GL10 gl)
 	{
@@ -81,17 +88,20 @@ public class GameView extends GLSurfaceView
 		Engine.line = new Line();
 		
 		Engine.PCSpriteHandle = Graphic.loadTextureGLES1(context, Engine.PCSpriteTexture, gl);
+		Engine.vPresents = new Vector<Present>();
 		Engine.ps = new PresentSigns(R.drawable.signs,gl);
-		Engine.pf = new PresentFactory(R.drawable.presents,gl);
-		
-		Engine.pf.spawnPresent(0.5f,0.8f);
+		Engine.pf = new PresentFactory();
+
+		Engine.vSpawnLocation = new Vector<SpawnLocation>();
 		
 		Engine.vCBelt = new Vector<ConveyorBelt>();
 		Engine.vCBelt.add(new ConveyorBelt(0, .75f  , 6, .1f));
 		Engine.vCBelt.add(new ConveyorBelt(1, .75f , 6, -.1f));
 		Engine.vCBelt.add(new ConveyorBelt(.5f, .55f , 2, .1f));
-		Engine.vCBelt.add(new ConveyorBelt(0, .35f , 5, .03f));
+		Engine.vCBelt.add(new ConveyorBelt(0, .35f , 4, .05f));
 		Engine.vCBelt.add(new ConveyorBelt(1, .15f , 8, -.1f));
+
+		Engine.pf.getSpawnLocations();
 	}
 	
 	@Override
