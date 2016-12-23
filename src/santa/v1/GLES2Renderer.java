@@ -87,16 +87,6 @@ public class GLES2Renderer implements Renderer
     		cb.draw();
 
 		Engine.pf.spawn();
-		
-		GLES20.glUseProgram(mProgramPercentHandle); 	
-    	getLocations(mProgramPercentHandle);
-
-    	Matrix.setIdentityM(mModelMatrix, 0); 
-        Matrix.setIdentityM(mTextureMatrix, 0);
-    	GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
-		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mWrapTextureHandle);
-      	GLES20.glUniform1i(mWrapTextureUniformHandle, 1);
-      	GLES20.glUniform1f(mProcentHandle, 0.5f + Engine.percent/2f);
       	
     	Engine.pf.drawPresents();
     	
