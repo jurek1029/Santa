@@ -54,8 +54,11 @@ public class PresentFactory {
             for (Present p : Engine.vPresents) {
                 synchronized (p.signs) {
                 if (p.signs.size() == 0) continue;
-                if (p.signs.firstElement() == Engine.currentShape.ordinal())
+                else if (p.signs.firstElement() == Engine.currentShape.ordinal())
+                {
                     p.signs.remove(0);
+                    if (p.signs.size() == 0) SantaActivity.score.setText("Score: "+ ++Engine.score);
+                }
             }
             }
     }

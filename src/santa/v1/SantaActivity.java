@@ -31,6 +31,7 @@ public class SantaActivity extends Activity {
 	MediaPlayer mp;
 	// temp
 	TextView tv;
+	public static TextView score;
 	
 	
 	
@@ -56,7 +57,9 @@ public class SantaActivity extends Activity {
 			{
 				Engine.inGame = true;
 				setContentView(R.layout.activity_santa);
-		        gameView = (GameView)findViewById(R.id.gl_surface_view);		        
+		        gameView = (GameView)findViewById(R.id.gl_surface_view);		
+		        score = (TextView)findViewById(R.id.textView2);
+		        score.setText("Score: 0");
 			}
 		});
 
@@ -188,6 +191,8 @@ public class SantaActivity extends Activity {
     				Engine.inGame = true;
     				setContentView(R.layout.activity_santa);
     		        gameView = (GameView)findViewById(R.id.gl_surface_view);
+    		        score = (TextView)findViewById(R.id.textView2);
+    		        score.setText("Score: 0");
     			}
     		});
             imgbnt.bringToFront();

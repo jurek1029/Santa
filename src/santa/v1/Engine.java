@@ -16,6 +16,7 @@ public class Engine
 	public static Object[] ObjTab = new Object[1];
 	public static int height;
 	public static int width;
+	public static int score = 0;
 
 //Line
 	public static Vector<Pair<Float, Float>> pLine;
