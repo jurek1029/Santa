@@ -1,6 +1,5 @@
 package santa.v1;
 
-import java.io.InputStream;
 import java.util.Vector;
 
 import Shapes.NormShape;
@@ -10,20 +9,14 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Movie;
 import android.graphics.Point;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -38,7 +31,6 @@ public class SantaActivity extends Activity {
 	MediaPlayer mp;
 	// temp
 	TextView tv;
-	//Movie m;
 	
 	
 	
@@ -64,7 +56,7 @@ public class SantaActivity extends Activity {
 			{
 				Engine.inGame = true;
 				setContentView(R.layout.activity_santa);
-		        gameView = (GameView)findViewById(R.id.gl_surface_view);
+		        gameView = (GameView)findViewById(R.id.gl_surface_view);		        
 			}
 		});
 

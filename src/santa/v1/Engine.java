@@ -2,14 +2,8 @@ package santa.v1;
 
 import java.util.Vector;
 
-import Objects.ConveyorBelt;
-import Objects.Present;
-import Objects.PresentFactory;
-import Objects.PresentSigns;
-import Objects.Snow;
-import Objects.Line;
+import Objects.*;
 import Objects.Object;
-import Objects.SpawnLocation;
 import Shapes.*;
 import android.content.Context;
 import android.util.Pair;

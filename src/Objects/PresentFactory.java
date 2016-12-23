@@ -60,13 +60,22 @@ public class PresentFactory {
             }
     }
 
-    public void drawPresents()
-    {
+    public void drawPresents() // zmienilem w celu optymalizacji
+    { 
+    	GLES20.glUseProgram(GLES2Renderer.mProgramPercentHandle); 	
+       	GLES2Renderer.getLocations(GLES2Renderer.mProgramPercentHandle);
+       	GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle);
+        GLES20.glUniform1i(GLES2Renderer.mTextureUniformHandle, 0);
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
+		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, GLES2Renderer.mWrapTextureHandle);
+      	GLES20.glUniform1i(GLES2Renderer.mWrapTextureUniformHandle, 1);
+    	
         Iterator<Present> it = Engine.vPresents.iterator();
         while(it.hasNext())
         {
-            Present p=it.next();
-
+            Present p=it.next();       
+            
             Matrix.setIdentityM(GLES2Renderer.mModelMatrix,0);
             Matrix.translateM(GLES2Renderer.mModelMatrix,0,p.x,p.y,0);
             Matrix.scaleM(GLES2Renderer.mModelMatrix,0,p.width,p.height,1);
@@ -75,16 +84,30 @@ public class PresentFactory {
             Matrix.translateM(GLES2Renderer.mModelMatrix,0,-0.5f,-0.5f,0);
 
             Matrix.setIdentityM(GLES2Renderer.mTextureMatrix,0);
-
-            GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle);
-            GLES20.glUniform1i(GLES2Renderer.mTextureUniformHandle, 0);
-
+          
+          	GLES20.glUniform1f(GLES2Renderer.mProcentHandle, 0.5f + (1-p.signs.size()/p.startingSignsCount)/2f);
+          	
             p.draw();
 
-            Engine.ps.drawSigns(p);
-
             if (p.y<-Engine.presentMaxSize-0.1f) it.remove();
+        }
+        
+        GLES20.glUseProgram(GLES2Renderer.mProgramHandle); 	
+    	GLES2Renderer.getLocations(GLES2Renderer.mProgramHandle);
+        
+        for(Present p : Engine.vPresents)// chyba moge foreach bo w tej petli nie usuwasz prezentow i z nikad indziej ich nie usuwasz
+        {
+        
+        	 Matrix.setIdentityM(GLES2Renderer.mModelMatrix,0);
+             Matrix.translateM(GLES2Renderer.mModelMatrix,0,p.x,p.y,0);
+             Matrix.scaleM(GLES2Renderer.mModelMatrix,0,p.width,p.height,1);
+             Matrix.translateM(GLES2Renderer.mModelMatrix,0,0.5f,0.5f,0);
+             Matrix.rotateM(GLES2Renderer.mModelMatrix,0,p.rotationAngle,0,0,1);
+             Matrix.translateM(GLES2Renderer.mModelMatrix,0,-0.5f,-0.5f,0);
+
+             Matrix.setIdentityM(GLES2Renderer.mTextureMatrix,0);
+    	
+             Engine.ps.drawSigns(p);
         }
 
     }

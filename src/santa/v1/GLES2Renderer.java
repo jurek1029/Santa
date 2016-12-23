@@ -40,13 +40,13 @@ public class GLES2Renderer implements Renderer
 	public static int mWrapTextureHandle;
 	
 	
-	private final float[] mLightPosInModelSpace = new float[] {0.0f, 0.0f, 0.0f, 1.0f};
+	public static final float[] mLightPosInModelSpace = new float[] {0.0f, 0.0f, 0.0f, 1.0f};
 	public static final float[] mLightPosInWorldSpace = new float[4];
 	public static final float[] mLightPosInEyeSpace = new float[4];
 	
-	private int mProgramHandle;
-	private int mProgramPercentHandle;
-	private int mProgramLineHandle;
+	public static int mProgramHandle;
+	public static int mProgramPercentHandle;
+	public static int mProgramLineHandle;
 	
 	private long loopStart = 0;
 	private long loopEnd = 0;
@@ -87,6 +87,17 @@ public class GLES2Renderer implements Renderer
     		cb.draw();
 
 		Engine.pf.spawn();
+		
+		GLES20.glUseProgram(mProgramPercentHandle); 	
+    	getLocations(mProgramPercentHandle);
+
+    	Matrix.setIdentityM(mModelMatrix, 0); 
+        Matrix.setIdentityM(mTextureMatrix, 0);
+    	GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
+		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mWrapTextureHandle);
+      	GLES20.glUniform1i(mWrapTextureUniformHandle, 1);
+      	GLES20.glUniform1f(mProcentHandle, 0.5f + Engine.percent/2f);
+      	
     	Engine.pf.drawPresents();
     	
     	if(Engine.update)
@@ -102,7 +113,7 @@ public class GLES2Renderer implements Renderer
 		loopRunTime = (loopEnd-loopStart);
 	}
 
-	private void getLocations(int program)
+	public static void getLocations(int program)
 	{
 		if(program == mProgramHandle)
 		{
@@ -186,7 +197,9 @@ public class GLES2Renderer implements Renderer
 		mProgramHandle = Graphic.createAndLinkProgram(vertexShaderHandle, fragmentShaderHandle, 
 				new String[] {"a_Position", "a_TexCoordinate"});				
         
+		vertexShader = RawResourceReader.readTextFileFromRawResource(mActivityContext, R.raw.per_pixel_vertex_shader_percent);
 		fragmentShader = RawResourceReader.readTextFileFromRawResource(mActivityContext, R.raw.per_pixel_fragment_shader_procent);		
+		vertexShaderHandle = Graphic.compileShader(GLES20.GL_VERTEX_SHADER, vertexShader);
 		fragmentShaderHandle = Graphic.compileShader(GLES20.GL_FRAGMENT_SHADER, fragmentShader);
 		
 		mProgramPercentHandle = Graphic.createAndLinkProgram(vertexShaderHandle, fragmentShaderHandle, 
@@ -202,7 +215,7 @@ public class GLES2Renderer implements Renderer
 				new String[] {"a_Position"});
 		
 		SantaActivity.gameView.load();
-		mWrapTextureHandle = Graphic.loadTextureGLES2(Engine.ctx, R.drawable.tumblr);
+		mWrapTextureHandle = Graphic.loadTextureGLES2(Engine.ctx, R.drawable.wraped);
 	 }
 
 }

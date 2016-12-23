@@ -19,6 +19,7 @@ public class Present extends Object {
     float textureScale;
 
     Vector<Integer> signs;
+    public float startingSignsCount;
     public float rotationFull90;
     public int lastCollision;
     public float rotationAngle;
@@ -41,7 +42,8 @@ public class Present extends Object {
         if(SantaActivity.supportsEs2)
             allocateGLES2();
 
-        signs = Engine.ps.genSigns();
+        signs = Engine.ps.genSigns();        
+        startingSignsCount = signs.size();
     }
 
 
