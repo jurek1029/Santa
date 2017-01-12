@@ -87,6 +87,7 @@ public class GLES2Renderer implements Renderer
     		cb.draw();
 
 		Engine.pf.spawn();
+		Engine.pf.makeGameHarder();
       	
     	Engine.pf.drawPresents();
     	
