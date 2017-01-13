@@ -11,12 +11,19 @@ import android.util.Pair;
 public class Engine 
 {
 	public static boolean inGame = false;
+	public static boolean paused = false;
+	public static int resumed = 0;
 	public static final int GAME_THREAD_FPS_SLEEP = (1000/60);
 	public static Context ctx;
 	public static Object[] ObjTab = new Object[1];
 	public static int height;
 	public static int width;
 	public static int score = 0;
+	public static int bestScore;
+	public static int textureBackground = R.drawable.gradient;
+	public static int fadingDuration = 300/60;
+	public static int animationCounter = 0;
+	public static int animationType = 0; // 0 = null, 1 = in, 2 = out
 
 //Line
 	public static Vector<Pair<Float, Float>> pLine;

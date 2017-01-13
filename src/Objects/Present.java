@@ -4,6 +4,7 @@ package Objects;
  * Created by Przemek on 10.12.2016.
  */
 
+import java.util.Random;
 import java.util.Vector;
 
 import santa.v1.Engine;
@@ -24,6 +25,7 @@ public class Present extends Object {
     public int lastCollision;
     public float rotationAngle;
     public float Vy = 0;
+    public int color;
 
     public Present(float x, float y, float size,int type,int textureH)
     {
@@ -36,6 +38,9 @@ public class Present extends Object {
         rotationAngle = 0;
         rotationFull90 = 0;
         lastCollision =0;
+        
+        Random rng = new Random();
+        color = rng.nextInt(3);
 
         this.texture = new float[]{0f,.5f,.5f,.5f,.5f,1f,0f,1f};
         allocate();

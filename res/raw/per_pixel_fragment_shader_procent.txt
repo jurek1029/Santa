@@ -4,6 +4,7 @@ uniform vec3 u_LightPos;
 uniform sampler2D u_Texture;    
 uniform sampler2D u_WrapTexture;    
 uniform float u_pro; // 0-1
+uniform vec4 u_colorWrap;
  
 varying vec3 v_Position;        
 varying vec4 v_Color;           
@@ -13,11 +14,11 @@ varying vec2 v_TexCoordinate;
 // The entry point for our fragment shader.
 void main()
 {
-	vec2 v_TexCoordinateClamped = (v_TexCoordinate - vec2(0,0.5))*vec2(1,1.0 + 3.0/13.0) +  vec2(0,0.5);
+	vec2 v_TexCoordinateClamped = (v_TexCoordinate - vec2(0,0.5))*vec2(1,1.0 + 52.0/204) +  vec2(0,0.5);
 	
 	if(v_TexCoordinate.y > u_pro)
 	{
-		if(v_TexCoordinate.y < 0.5 + 52.0/128.0)
+		if(v_TexCoordinate.y < 0.5 + 102.0/256.0)
 		{
 			gl_FragColor = (v_Color * texture2D(u_Texture, v_TexCoordinateClamped));
 		}
@@ -28,8 +29,8 @@ void main()
 	}
 	else
 	{
-		vec2 v_WTexCoord = (v_TexCoordinateClamped - vec2(0,0.5))*208.0/128.0;
-		gl_FragColor = (v_Color * texture2D(u_WrapTexture, v_WTexCoord));//*texture2D(u_Texture, v_TexCoordinateClamped).a);
+		vec2 v_WTexCoord = (v_TexCoordinateClamped - vec2(0,0.5))*204.0/128.0;
+		gl_FragColor = (u_colorWrap * texture2D(u_WrapTexture, v_WTexCoord));//*texture2D(u_Texture, v_TexCoordinateClamped).a);
 	}
 	
   }

@@ -34,6 +34,7 @@ public class GLES2Renderer implements Renderer
 	public static int mTextureCoordinateHandle;
 	public static int mTextureMatrixHandle;
 	public static int mColorHandle;
+	public static int mColorWrapHandle;
 	public static int mProcentHandle;
 	public static int mWrapTextureUniformHandle;
 	
@@ -69,38 +70,72 @@ public class GLES2Renderer implements Renderer
 			e.printStackTrace();
 		}
 		
-		GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);				
-		
-		Engine.gravity(loopRunTime);
-		
-		GLES20.glUseProgram(mProgramHandle); 	
-    	getLocations(mProgramHandle);
-
-    	Matrix.setIdentityM(mModelMatrix, 0); 
-        Matrix.setIdentityM(mTextureMatrix, 0);
-    	GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, Engine.ObjTab[0].textureHandle);
-      	GLES20.glUniform1i(mTextureUniformHandle, 0);
-    	Engine.ObjTab[0].draw();
-    	
-    	for(ConveyorBelt cb : Engine.vCBelt)
-    		cb.draw();
-
-		Engine.pf.spawn();
-      	
-    	Engine.pf.drawPresents();
-    	
-    	if(Engine.update)
+		if(!Engine.paused)
 		{
-			Engine.line.updateVertices((Vector<Pair<Float, Float>>) Engine.pLine.clone());
-			GLES20.glUseProgram(mProgramLineHandle); 	
-	    	getLocations(mProgramLineHandle);
-	    	Matrix.setIdentityM(mModelMatrix, 0); 
-	    	Engine.line.draw();
+			GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);				
+			
+			GLES20.glUseProgram(mProgramHandle); 	
+	    	getLocations(mProgramHandle);
+			
+	    	mColor = new float[]{1,1,1,1};
+	    	
+			Matrix.setIdentityM(mModelMatrix, 0); 
+	        Matrix.setIdentityM(mTextureMatrix, 0);
+	    	GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, Engine.ObjTab[0].textureHandle);
+	      	GLES20.glUniform1i(mTextureUniformHandle, 0);
+	    	Engine.ObjTab[0].draw();
+	    	
+			if(Engine.inGame)
+			{		
+				Engine.gravity(loopRunTime);
+				
+			//	GLES20.glUseProgram(mProgramHandle); 	
+		    //	getLocations(mProgramHandle);
+		    	
+				if(Engine.animationType == 1)
+				{
+					if(Engine.animationCounter < Engine.fadingDuration)++Engine.animationCounter;
+				}
+				else if (Engine.animationType == 2)
+				{
+					if(Engine.animationCounter > 0)--Engine.animationCounter;
+					else 	
+						{Engine.inGame = false; Engine.vPresents.clear();}
+				}
+				mColor = new float[]{1,1,1,(float)Engine.animationCounter/(float)Engine.fadingDuration};
+				
+		    	for(ConveyorBelt cb : Engine.vCBelt)
+		    		cb.draw();
+		
+				Engine.pf.spawn();
+		      	
+				
+			    Engine.pf.drawPresents();
+			    	
+		    	if(Engine.update)
+				{
+		    		mColor = new float[]{1,1,0,(float)Engine.animationCounter/(float)Engine.fadingDuration};
+					Engine.line.updateVertices((Vector<Pair<Float, Float>>) Engine.pLine.clone());
+					GLES20.glUseProgram(mProgramLineHandle); 	
+			    	getLocations(mProgramLineHandle);
+			    	Matrix.setIdentityM(mModelMatrix, 0); 
+			    	Engine.line.draw();
+			    	mColor = new float[]{1,1,1,(float)Engine.animationCounter/(float)Engine.fadingDuration};
+				}
+				
+			}
+			if(Engine.resumed>0)
+			{
+				--Engine.resumed;
+				if(Engine.resumed == 0)
+					Engine.paused = true;
+			}
+
 		}
-    	
 		loopEnd = System.currentTimeMillis();
 		loopRunTime = (loopEnd-loopStart);
+	
 	}
 
 	public static void getLocations(int program)
@@ -114,6 +149,7 @@ public class GLES2Renderer implements Renderer
 			mPositionHandle = GLES20.glGetAttribLocation(program, "a_Position");
 			mTextureCoordinateHandle = GLES20.glGetAttribLocation(program, "a_TexCoordinate");		
 			mTextureMatrixHandle = GLES20.glGetUniformLocation(program, "u_TextureMatrix");
+			mColorHandle = GLES20.glGetUniformLocation(program, "u_color");
 			
 			Matrix.setIdentityM(mLightModelMatrix, 0);
 			Matrix.translateM(mLightModelMatrix, 0, 0.0f, 2.0f, 6.0f);
@@ -132,6 +168,8 @@ public class GLES2Renderer implements Renderer
 			mTextureMatrixHandle = GLES20.glGetUniformLocation(program, "u_TextureMatrix");
 			mWrapTextureUniformHandle = GLES20.glGetUniformLocation(program, "u_WrapTexture");
 			mProcentHandle = GLES20.glGetUniformLocation(program, "u_pro");
+			mColorHandle = GLES20.glGetUniformLocation(program, "u_color");
+			mColorWrapHandle = GLES20.glGetUniformLocation(program, "u_colorWrap");
 			
 			Matrix.setIdentityM(mLightModelMatrix, 0);
 			Matrix.translateM(mLightModelMatrix, 0, 0.0f, 2.0f, 6.0f);
@@ -205,7 +243,7 @@ public class GLES2Renderer implements Renderer
 				new String[] {"a_Position"});
 		
 		SantaActivity.gameView.load();
-		mWrapTextureHandle = Graphic.loadTextureGLES2(Engine.ctx, R.drawable.wraped);
+		mWrapTextureHandle = Graphic.loadTextureGLES2(Engine.ctx, R.drawable.present_temp);
 	 }
 
 }

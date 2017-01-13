@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <santa.v1.MenuView
+    <santa.v1.GameView
         android:id="@+id/menuView1"
         android:layout_width="match_parent"
    		android:layout_height="match_parent" />
@@ -19,8 +19,21 @@
 
         android:gravity="center"
         android:text="Best Game Ever"
-        android:textColor="#bf0005"
+        android:textColor="#ffffff"
         android:textSize="60sp" />
+    
+    <TextView
+   	    android:id="@+id/textView2"
+   	    android:layout_width="wrap_content"
+   	    android:layout_height="wrap_content"
+   	    android:layout_alignParentRight="true"
+   	    android:layout_alignParentTop="true"
+   	    android:layout_marginRight="24dp"
+   	    android:text="TextView" 
+   	    android:enabled="false"
+   	    android:visibility="gone"
+   	    android:textColor="#ffffff"
+        android:textSize="20sp"/>
 
     <ImageButton
         android:id="@+id/soundButton"
@@ -36,15 +49,64 @@
         android:layout_alignParentEnd="true"
         android:src="@drawable/sound_on" />
 
+    <ImageView
+        android:id="@+id/pauseBG"
+        android:layout_width="256dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:adjustViewBounds="false"
+        android:scaleType="fitXY"
+        android:src="@drawable/menu_pause"
+        android:enabled="false"
+   	    android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/pausePalyButton"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/blank"
+        android:layout_centerHorizontal="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/play"
+        android:enabled="false"
+   	    android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/pauseSoundButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignRight="@+id/pauseBG"
+        android:layout_alignTop="@+id/pauseBG"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/blank"
+        android:enabled="false"
+        android:scaleType="fitCenter"
+        android:src="@drawable/sound_on"
+        android:visibility="gone" />
+
     <ImageButton
         android:id="@+id/StartButton"
         android:layout_width="128dp"
         android:layout_height="128dp"
-        android:layout_marginBottom= "139dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="152dp"
         android:background="@drawable/blank"
         android:scaleType="fitCenter"
-        android:src="@drawable/play_button_gray"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:src="@drawable/play" />
+
+    <TextView
+        android:id="@+id/bestScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/Title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="19dp"
+        android:text="Best Score :" 
+        android:textColor="#ffffff"
+        android:textSize="30sp"/>
 
 </RelativeLayout>

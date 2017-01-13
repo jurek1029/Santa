@@ -148,7 +148,8 @@ public class Object {
         GLES20.glUniformMatrix4fv(GLES2Renderer.mMVPMatrixHandle, 1, false, GLES2Renderer.mMVPMatrix, 0);
           
         GLES20.glUniform3f(GLES2Renderer.mLightPosHandle, GLES2Renderer.mLightPosInEyeSpace[0], GLES2Renderer.mLightPosInEyeSpace[1], GLES2Renderer.mLightPosInEyeSpace[2]);
-		
+		GLES20.glUniform4f(GLES2Renderer.mColorHandle, GLES2Renderer.mColor[0], GLES2Renderer.mColor[1], GLES2Renderer.mColor[2],GLES2Renderer.mColor[3]);
+        
 		GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, ibo[0]);
 		GLES20.glDrawElements(GLES20.GL_TRIANGLES, indices.length, GLES20.GL_UNSIGNED_BYTE, 0);
 

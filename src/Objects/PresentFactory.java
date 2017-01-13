@@ -73,6 +73,8 @@ public class PresentFactory {
         GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, GLES2Renderer.mWrapTextureHandle);
       	GLES20.glUniform1i(GLES2Renderer.mWrapTextureUniformHandle, 1);
+      	
+      	
     	
         Iterator<Present> it = Engine.vPresents.iterator();
         while(it.hasNext())
@@ -89,6 +91,21 @@ public class PresentFactory {
             Matrix.setIdentityM(GLES2Renderer.mTextureMatrix,0);
           
           	GLES20.glUniform1f(GLES2Renderer.mProcentHandle, 0.5f + (1-p.signs.size()/p.startingSignsCount)/2f);
+          	switch(p.color)
+          	{
+          	case 0:
+          		GLES20.glUniform4f(GLES2Renderer.mColorWrapHandle, 1,1,1,1);
+          		break;
+          	case 1:
+          		GLES20.glUniform4f(GLES2Renderer.mColorWrapHandle, 1,1,0,1);
+          		break;          		
+          	case 2:
+          		GLES20.glUniform4f(GLES2Renderer.mColorWrapHandle, 1,1,1,1);//TODO
+          		break;
+          	case 3:
+          		GLES20.glUniform4f(GLES2Renderer.mColorWrapHandle, 1,1,0,1);//TODO
+          		break;
+          	}
           	
             p.draw();
 

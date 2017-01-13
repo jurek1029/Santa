@@ -1,6 +1,7 @@
 uniform mat4 u_MVPMatrix;       
 uniform mat4 u_MVMatrix;      
 uniform mat4 u_TextureMatrix;  
+uniform vec4 u_color;
  
 attribute vec4 a_Position;      
 //attribute vec3 a_Normal;        
@@ -15,7 +16,7 @@ void main()
 {
     v_Position = vec3(u_MVMatrix * a_Position);
  
-    v_Color = vec4(1.0, 1.0, 1.0, 1.0);
+    v_Color = u_color;
  
     v_TexCoordinate = (u_TextureMatrix * vec4(a_TexCoordinate,0,1)).xy;
  

@@ -32,33 +32,50 @@ public class GameRenderer implements Renderer
 			e.printStackTrace();
 		}
 		
-		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-		
-		Engine.gravity(loopRunTime);
-		
-
-		gl.glMatrixMode(GL10.GL_TEXTURE);
-		gl.glLoadIdentity();
-		gl.glMatrixMode(GL10.GL_MODELVIEW);
-		gl.glLoadIdentity();
-		Engine.ObjTab[0].draw(gl);
-
-		for(ConveyorBelt cb : Engine.vCBelt)
-    		cb.draw(gl);
-
-		Engine.pf.spawn();
-		Engine.pf.drawPresents(gl); //TWOJ PREZENT COS PSUJE
-		
-		if(Engine.update)
+		if(!Engine.paused)
 		{
-			Engine.line.updateVertices((Vector<Pair<Float, Float>>) Engine.pLine.clone());
-			gl.glColor4f(0,0, 0, 1f);
-			gl.glLineWidth(10f);
-	    	Engine.line.draw(gl);
-	  		gl.glColor4f(1, 1, 1, 1);
+		
+			gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+			
+			gl.glColor4f(1, 1, 1, 1);
+			
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			Engine.ObjTab[0].draw(gl);
+			
+			if(Engine.inGame)
+			{
+				Engine.gravity(loopRunTime);
+		
+				if(Engine.animationType == 1)
+				{
+					if(Engine.animationCounter < Engine.fadingDuration)++Engine.animationCounter;
+				}
+				else if (Engine.animationType == 2)
+				{
+					if(Engine.animationCounter > 0)--Engine.animationCounter;
+					else 	Engine.inGame = false;
+				}
+				gl.glColor4f(1,1,1,(float)Engine.animationCounter/(float)Engine.fadingDuration);
+				
+				for(ConveyorBelt cb : Engine.vCBelt)
+		    		cb.draw(gl);
+		
+				Engine.pf.spawn();
+				Engine.pf.drawPresents(gl); //TWOJ PREZENT COS PSUJE
+				
+				if(Engine.update)
+				{
+					Engine.line.updateVertices((Vector<Pair<Float, Float>>) Engine.pLine.clone());
+					gl.glColor4f(0,0, 0, (float)Engine.animationCounter/(float)Engine.fadingDuration);
+					gl.glLineWidth(10f);
+			    	Engine.line.draw(gl);
+			  		gl.glColor4f(1, 1, 1, (float)Engine.animationCounter/(float)Engine.fadingDuration);
+				}
+			}
 		}
-		
-		
 		loopEnd = System.currentTimeMillis();
 		loopRunTime = (loopEnd-loopStart);
 	}
