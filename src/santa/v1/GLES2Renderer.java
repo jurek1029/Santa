@@ -70,61 +70,62 @@ public class GLES2Renderer implements Renderer
 			e.printStackTrace();
 		}
 		
-		if(!Engine.paused)
-		{
-			GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);				
-			
-			GLES20.glUseProgram(mProgramHandle); 	
-	    	getLocations(mProgramHandle);
-			
-	    	mColor = new float[]{1,1,1,1};
-	    	
-			Matrix.setIdentityM(mModelMatrix, 0); 
-	        Matrix.setIdentityM(mTextureMatrix, 0);
-	    	GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, Engine.ObjTab[0].textureHandle);
-	      	GLES20.glUniform1i(mTextureUniformHandle, 0);
-	    	Engine.ObjTab[0].draw();
-	    	
-			if(Engine.inGame)
-			{		
-				Engine.gravity(loopRunTime);
-				
-			//	GLES20.glUseProgram(mProgramHandle); 	
-		    //	getLocations(mProgramHandle);
-		    	
-				if(Engine.animationType == 1)
-				{
-					if(Engine.animationCounter < Engine.fadingDuration)++Engine.animationCounter;
-				}
-				else if (Engine.animationType == 2)
-				{
-					if(Engine.animationCounter > 0)--Engine.animationCounter;
-					else 	
-						{Engine.inGame = false; Engine.vPresents.clear();}
-				}
-				mColor = new float[]{1,1,1,(float)Engine.animationCounter/(float)Engine.fadingDuration};
-				
-		    	for(ConveyorBelt cb : Engine.vCBelt)
-		    		cb.draw();
+		GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);				
 		
+		GLES20.glUseProgram(mProgramHandle); 	
+    	getLocations(mProgramHandle);
+		
+    	mColor = new float[]{1,1,1,1};
+    	
+		Matrix.setIdentityM(mModelMatrix, 0); 
+        Matrix.setIdentityM(mTextureMatrix, 0);
+    	GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, Engine.ObjTab[0].textureHandle);
+      	GLES20.glUniform1i(mTextureUniformHandle, 0);
+    	Engine.ObjTab[0].draw();
+    	
+		if(Engine.inGame)
+		{		
+			if(!Engine.paused)
+				Engine.gravity(loopRunTime);
+			
+		//	GLES20.glUseProgram(mProgramHandle); 	
+	    //	getLocations(mProgramHandle);
+	    	
+			if(Engine.animationType == 1)
+			{
+				if(Engine.animationCounter < Engine.fadingDuration)++Engine.animationCounter;
+			}
+			else if (Engine.animationType == 2)
+			{
+				if(Engine.animationCounter > 0)--Engine.animationCounter;
+				else 	
+					{Engine.inGame = false; Engine.vPresents.clear();}
+			}
+			mColor = new float[]{1,1,1,(float)Engine.animationCounter/(float)Engine.fadingDuration};
+			
+	    	for(ConveyorBelt cb : Engine.vCBelt)
+	    		cb.draw();
+	
+	    	if(!Engine.paused)
+	    	{
 				Engine.pf.spawn();
 				Engine.pf.makeGameHarder();
-				
-			    Engine.pf.drawPresents();
-			    	
-		    	if(Engine.update)
-				{
-		    		mColor = new float[]{1,1,0,(float)Engine.animationCounter/(float)Engine.fadingDuration};
-		    		Engine.line.updateVertices((Vector<Pair<Float, Float>>) Engine.pLine.clone());
-					GLES20.glUseProgram(mProgramLineHandle); 	
-			    	getLocations(mProgramLineHandle);
-			    	Matrix.setIdentityM(mModelMatrix, 0); 
-			    	Engine.line.draw();
-			    	mColor = new float[]{1,1,1,(float)Engine.animationCounter/(float)Engine.fadingDuration};
-				}
-				
+	    	}
+			
+		    Engine.pf.drawPresents();
+		    	
+	    	if(Engine.update)
+			{
+	    		mColor = new float[]{1,1,0,(float)Engine.animationCounter/(float)Engine.fadingDuration};
+	    		Engine.line.updateVertices((Vector<Pair<Float, Float>>) Engine.pLine.clone());
+				GLES20.glUseProgram(mProgramLineHandle); 	
+		    	getLocations(mProgramLineHandle);
+		    	Matrix.setIdentityM(mModelMatrix, 0); 
+		    	Engine.line.draw();
+		    	mColor = new float[]{1,1,1,(float)Engine.animationCounter/(float)Engine.fadingDuration};
 			}
+	    	
 			if(Engine.resumed>0)
 			{
 				--Engine.resumed;

@@ -286,9 +286,9 @@ public class SantaActivity extends Activity {
     			    SharedPreferences.Editor editor = settings.edit();
     			    editor.putInt("bestScore", Engine.score);
     			    editor.commit();
-    			    Engine.bestScore = Engine.score;
+    			    Engine.bestScore = Engine.score; 			    
     			}
-    			
+    			Engine.score = 0;
     			//Engine.inGame = false;    	
     			Engine.paused = false;
 	    		title.setVisibility(View.VISIBLE);
@@ -358,6 +358,7 @@ public class SantaActivity extends Activity {
     	else
     	{
     		super.onBackPressed();
+    		mp.pause();
     	}
     }
     
@@ -366,7 +367,10 @@ public class SantaActivity extends Activity {
 	{
 		super.onResume();
 		if(Engine.inGame)
+		{
 			gameView.onResume();
+			mp.start();
+		}
 	}
 	
 	@Override
@@ -375,9 +379,10 @@ public class SantaActivity extends Activity {
 		super.onPause();
 		if(Engine.inGame)
 		{
-			//TODO serializable
 			gameView.onPause();
 			//Engine.paused = true;
+			
+			mp.pause();
 			
 			title.setVisibility(View.GONE);
 			
