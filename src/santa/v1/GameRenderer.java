@@ -56,7 +56,7 @@ public class GameRenderer implements Renderer
 				else if (Engine.animationType == 2)
 				{
 					if(Engine.animationCounter > 0)--Engine.animationCounter;
-					else 	Engine.inGame = false;
+					else{ 	Engine.inGame = false; Engine.pf.backToBeginning();}
 				}
 				gl.glColor4f(1,1,1,(float)Engine.animationCounter/(float)Engine.fadingDuration);
 				
@@ -64,7 +64,8 @@ public class GameRenderer implements Renderer
 		    		cb.draw(gl);
 		
 				Engine.pf.spawn();
-				Engine.pf.drawPresents(gl); //TWOJ PREZENT COS PSUJE
+				Engine.pf.makeGameHarder();
+				Engine.pf.drawPresents(gl);
 				
 				if(Engine.update)
 				{

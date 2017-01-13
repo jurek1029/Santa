@@ -27,6 +27,10 @@ public class PresentSigns {
     int actSignIndex;
     Random rand = new Random();
 
+    public static int signsMaxNumber = Engine.signsMaxNumber;
+    public static int signsMinNumber = Engine.signsMinNumber;
+    public static int signsNormalNumber = Engine.signsNormalNumber;
+
     private class Shape extends Object
     {
         float width;
@@ -75,11 +79,11 @@ public class PresentSigns {
     private int getSignsQuantity()
     {
         double d = rand.nextGaussian();
-        d=d*Engine.signsStandardDeviation+Engine.signsNormalNumber;
+        d=d*Engine.signsStandardDeviation+signsNormalNumber;
         int n = (d-(int)d < 0.5f ? (int)Math.floor(d):(int)Math.ceil(d));
 
-        if (n>=Engine.signsMaxNumber) return Engine.signsMaxNumber;
-        if (n<=Engine.signsMinNumber) return Engine.signsMinNumber;
+        if (n>=signsMaxNumber) return signsMaxNumber;
+        if (n<=signsMinNumber) return signsMinNumber;
         return n;
     }
 
@@ -189,5 +193,11 @@ public class PresentSigns {
             actSignIndex++;
 
         }
+    }
+
+    public static void increaseAmount()
+    {
+        signsMaxNumber++;
+        signsNormalNumber++;
     }
 }

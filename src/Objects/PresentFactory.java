@@ -24,13 +24,14 @@ public class PresentFactory {
 
     int textureHandle;
     Random rand;
-    int presentActualMaxQuantity;
+    int presentMaxQuantity;
 
 
     public PresentFactory() {
 
         rand=new Random();
         textureHandle=Engine.PCSpriteHandle;
+        presentMaxQuantity = Engine.presentMaxQuantity;
 
     }
 
@@ -170,7 +171,7 @@ public class PresentFactory {
 
     public void spawn()
     {
-        if (rand.nextFloat()<0.5f || Engine.vPresents.size()>=Engine.presentMaxQuantity) return;
+        if (rand.nextFloat()<0.5f || Engine.vPresents.size()>=presentMaxQuantity) return;
 
         int n = rand.nextInt(Engine.vSpawnLocation.size());
         SpawnLocation s = Engine.vSpawnLocation.get(n);
@@ -183,16 +184,28 @@ public class PresentFactory {
         Engine.framesCounter++;
         Engine.timeCounter = Engine.framesCounter/60.0;
 
-        Engine.presentMaxQuantity = 1+(int)Math.sqrt(Engine.timeCounter/6);
-        int newSgnNormalNumber=(int)(2 + (Engine.timeCounter/25));
-        if (newSgnNormalNumber==Engine.signsNormalNumber+1)
+        presentMaxQuantity = Math.min(2+(int)Math.sqrt(Engine.timeCounter/15),Engine.presentMaxQuantity);
+        int newSgnNormalNumber=Math.min((int)(2 + (Engine.timeCounter/30)),Engine.signsMaxNormalNumber);
+        if (newSgnNormalNumber==PresentSigns.signsNormalNumber+1)
         {
-            Engine.signsNormalNumber++;
-            Engine.signsMaxNumber++;
-
+            PresentSigns.increaseAmount();
         }
 
 
+    }
+
+    public void backToBeginning()
+    {
+        synchronized (Engine.vPresents)
+        {
+            Engine.vPresents.clear();
+        }
+
+        Engine.framesCounter=0;
+        Engine.timeCounter=0;
+
+        PresentSigns.signsMaxNumber=Engine.signsMaxNumber;
+        PresentSigns.signsNormalNumber=Engine.signsNormalNumber;
     }
 
 }

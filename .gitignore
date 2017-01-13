@@ -48,3 +48,8 @@ project.properties
 gen/
 bin/
 .classpath
+res/drawable-hdpi/statek.png
+res/drawable-xxhdpi/ic_launcher.png
+*.png
+res/drawable-hdpi/tumblr.jpg
+res/drawable-hdpi/snow_g.gif

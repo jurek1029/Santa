@@ -67,6 +67,7 @@ public class Engine
 	public static int snowSpriteSize = 5;
 
 //PresentSigns
+	public static int signsMaxNormalNumber = 6;
 	public static int signsMaxNumber = 4;
 	public static int signsMinNumber = 1;
 	public static int signsNormalNumber = 2;
@@ -85,7 +86,7 @@ public class Engine
 	public static float presentMaxSize = 0.19f;
 	public static int presentSpriteSize = 2;
 	public static int presentTypeQuantity = 4;
-	public static int presentMaxQuantity = 1;
+	public static int presentMaxQuantity = 5;
 
 	public static Vector<Present> vPresents;
 	public static PresentFactory pf;

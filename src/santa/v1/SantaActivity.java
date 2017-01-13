@@ -19,7 +19,6 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -65,6 +64,7 @@ public class SantaActivity extends Activity {
 		
 		SharedPreferences settings = getSharedPreferences("best", 0);
 	    Engine.bestScore = settings.getInt("bestScore", 0);
+		sound = settings.getBoolean("Sound",true);
 	  
         //-------------------------------------Menu--------------------------------------------       
         
@@ -92,14 +92,15 @@ public class SantaActivity extends Activity {
         
         mp = MediaPlayer.create(this,R.raw.music);
 		mp.setLooping(true);
-		mp.start();
-		
+
 		pausePlayButton = (ImageButton)findViewById(R.id.pausePalyButton);
 		pauseSoundButton = (ImageButton)findViewById(R.id.pauseSoundButton);
 		pauseBG = (ImageView)findViewById(R.id.pauseBG);
 
-		setSound();
-        
+
+		setSoundBtnListeners();
+		initSoundButtons();
+
         playButton = (ImageButton)findViewById(R.id.StartButton);
 
         playButton.setOnClickListener(new View.OnClickListener() {	
@@ -320,7 +321,7 @@ public class SantaActivity extends Activity {
 		        pauseBG.setVisibility(View.GONE);
 		      //  pauseBG.startAnimation(animOUT);
 	    		
-	            setSound();
+	            setSoundBtnListeners();
     		}
     		else
     		{
@@ -357,7 +358,8 @@ public class SantaActivity extends Activity {
     	}
     	else
     	{
-    		super.onBackPressed();
+			super.onBackPressed();
+
     		mp.pause();
     	}
     }
@@ -369,7 +371,8 @@ public class SantaActivity extends Activity {
 		if(Engine.inGame)
 		{
 			gameView.onResume();
-			mp.start();
+			if (sound) mp.start();
+			else mp.pause();
 		}
 	}
 	
@@ -383,7 +386,7 @@ public class SantaActivity extends Activity {
 			//Engine.paused = true;
 			
 			mp.pause();
-			
+
 			title.setVisibility(View.GONE);
 			
     		bestScore.setVisibility(View.GONE);
@@ -407,10 +410,31 @@ public class SantaActivity extends Activity {
 			pauseBG.setVisibility(View.VISIBLE);
 			pauseBG.startAnimation(animIN);			
 		}
-	}
-    
+		SharedPreferences settings = getSharedPreferences("best", 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean("Sound",sound);
+		editor.commit();
 
-	private void setSound()
+	}
+
+	private void initSoundButtons()
+	{
+		if (sound)
+		{
+			soundButton.setBackgroundResource(R.drawable.sound_on);
+			pauseSoundButton.setBackgroundResource(R.drawable.sound_on);
+			mp.start();
+		}
+		else
+		{
+			soundButton.setBackgroundResource(R.drawable.sound_off);
+			pauseSoundButton.setBackgroundResource(R.drawable.sound_off);
+			mp.start();
+			mp.pause();
+		}
+	}
+
+	private void setSoundBtnListeners()
 	{
 		soundButton = (ImageButton)findViewById(R.id.soundButton);
 		soundButton.setOnClickListener(new View.OnClickListener() {

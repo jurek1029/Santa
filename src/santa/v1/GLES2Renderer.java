@@ -100,7 +100,7 @@ public class GLES2Renderer implements Renderer
 			{
 				if(Engine.animationCounter > 0)--Engine.animationCounter;
 				else 	
-					{Engine.inGame = false; Engine.vPresents.clear();}
+					{Engine.inGame = false; Engine.pf.backToBeginning();}
 			}
 			mColor = new float[]{1,1,1,(float)Engine.animationCounter/(float)Engine.fadingDuration};
 			
