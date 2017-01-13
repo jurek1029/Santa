@@ -62,7 +62,7 @@ public class PresentSigns {
     {
         Vector<Integer> vect = new Vector<Integer>();
 
-        int signsNumber = rand.nextInt(Engine.signsMaxNumber)+1;
+        int signsNumber = getSignsQuantity();
         for (int i=0; i<signsNumber; i++)
         {
             int n= rand.nextInt(Engine.shapes.size());
@@ -70,6 +70,17 @@ public class PresentSigns {
         }
 
         return vect;
+    }
+
+    private int getSignsQuantity()
+    {
+        double d = rand.nextGaussian();
+        d=d*Engine.signsStandardDeviation+Engine.signsNormalNumber;
+        int n = (d-(int)d < 0.5f ? (int)Math.floor(d):(int)Math.ceil(d));
+
+        if (n>=Engine.signsMaxNumber) return Engine.signsMaxNumber;
+        if (n<=Engine.signsMinNumber) return Engine.signsMinNumber;
+        return n;
     }
 
     private void setSignPos()

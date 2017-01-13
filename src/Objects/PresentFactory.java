@@ -24,12 +24,14 @@ public class PresentFactory {
 
     int textureHandle;
     Random rand;
+    int presentActualMaxQuantity;
 
 
     public PresentFactory() {
 
         rand=new Random();
         textureHandle=Engine.PCSpriteHandle;
+
     }
 
     private void spawnPresent(SpawnLocation sl)
@@ -169,9 +171,28 @@ public class PresentFactory {
     public void spawn()
     {
         if (rand.nextFloat()<0.5f || Engine.vPresents.size()>=Engine.presentMaxQuantity) return;
+
         int n = rand.nextInt(Engine.vSpawnLocation.size());
         SpawnLocation s = Engine.vSpawnLocation.get(n);
         if (s.canSpawn()) spawnPresent(s);
 
     }
+
+    public void makeGameHarder()
+    {
+        Engine.framesCounter++;
+        Engine.timeCounter = Engine.framesCounter/60.0;
+
+        Engine.presentMaxQuantity = 1+(int)Math.sqrt(Engine.timeCounter/6);
+        int newSgnNormalNumber=(int)(2 + (Engine.timeCounter/25));
+        if (newSgnNormalNumber==Engine.signsNormalNumber+1)
+        {
+            Engine.signsNormalNumber++;
+            Engine.signsMaxNumber++;
+
+        }
+
+
+    }
+
 }

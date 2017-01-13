@@ -24,6 +24,7 @@ public class Engine
 	public static int fadingDuration = 300/60;
 	public static int animationCounter = 0;
 	public static int animationType = 0; // 0 = null, 1 = in, 2 = out
+	public static int health = 3;
 
 //Line
 	public static Vector<Pair<Float, Float>> pLine;
@@ -41,7 +42,7 @@ public class Engine
 	public static final float MAX_NORM_DISTORTION = Float.MAX_VALUE; // TODO set value
 	public static final float MIN_RATIO_FOR_VA = 0.3f;
 	
-	public static void SetShapes()
+	public static void setShapes()
 	{
 		shapes = new Vector<Shapes>();
 		shapes.add(new LineV());
@@ -66,13 +67,16 @@ public class Engine
 	public static int snowSpriteSize = 5;
 
 //PresentSigns
-	public static int signsMaxNumber = 6;
+	public static int signsMaxNumber = 4;
+	public static int signsMinNumber = 1;
+	public static int signsNormalNumber = 2;
 	public static float signSize = 0.05f;
 	public static float signGapAbovePresent = 0.013f;
 	public static int signSpriteSize = 2;
+	public static float signsStandardDeviation = 0.95f;
 
 	public static PresentSigns ps;
-	public static Vector<Integer> vect;
+
 
 //Presents
 	public static int PCSpriteTexture = R.drawable.conveyor_sprite;
@@ -81,15 +85,20 @@ public class Engine
 	public static float presentMaxSize = 0.19f;
 	public static int presentSpriteSize = 2;
 	public static int presentTypeQuantity = 4;
-	public static int presentMaxQuantity = 5;
+	public static int presentMaxQuantity = 1;
 
 	public static Vector<Present> vPresents;
 	public static PresentFactory pf;
-	
+
 //ConveyorBelt
 	public static Vector<ConveyorBelt> vCBelt;
 	public static float ConveyorBeltScale = 10f;
 	public static Vector<SpawnLocation>  vSpawnLocation;
+
+//time
+	public static long framesCounter = 0;
+	public static double timeCounter = 0;
+
 	
 // Physics 
 	public static float gravityConst = -2f;

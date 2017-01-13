@@ -187,7 +187,7 @@ public class SantaActivity extends Activity {
 		
 		
 		Engine.pLine = new Vector<Pair<Float, Float>>();	
-		Engine.SetShapes();
+		Engine.setShapes();
 
         //setContentView(R.layout.activity_santa);
         //gameView = (GameView)findViewById(R.id.gl_surface_view);

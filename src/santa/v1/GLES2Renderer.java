@@ -109,14 +109,14 @@ public class GLES2Renderer implements Renderer
 		    		cb.draw();
 		
 				Engine.pf.spawn();
-		      	
+				Engine.pf.makeGameHarder();
 				
 			    Engine.pf.drawPresents();
 			    	
 		    	if(Engine.update)
 				{
 		    		mColor = new float[]{1,1,0,(float)Engine.animationCounter/(float)Engine.fadingDuration};
-					Engine.line.updateVertices((Vector<Pair<Float, Float>>) Engine.pLine.clone());
+		    		Engine.line.updateVertices((Vector<Pair<Float, Float>>) Engine.pLine.clone());
 					GLES20.glUseProgram(mProgramLineHandle); 	
 			    	getLocations(mProgramLineHandle);
 			    	Matrix.setIdentityM(mModelMatrix, 0); 
@@ -131,7 +131,6 @@ public class GLES2Renderer implements Renderer
 				if(Engine.resumed == 0)
 					Engine.paused = true;
 			}
-
 		}
 		loopEnd = System.currentTimeMillis();
 		loopRunTime = (loopEnd-loopStart);
