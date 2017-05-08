@@ -6,6 +6,7 @@ import Objects.*;
 import Objects.Object;
 import Shapes.*;
 import android.content.Context;
+import android.os.Vibrator;
 import android.util.Pair;
 
 public class Engine 
@@ -20,11 +21,23 @@ public class Engine
 	public static int width;
 	public static int score = 0;
 	public static int bestScore;
-	public static int textureBackground = R.drawable.gradient;
-	public static int fadingDuration = 300/60;
+	public static int textureBackground = R.drawable.bg;
+	public static int fadingDuration = 15; // in frames
 	public static int animationCounter = 0;
 	public static int animationType = 0; // 0 = null, 1 = in, 2 = out
-	public static int health = 3;
+	public static SantaActivity MainActivity;
+	public static Vibrator vib;
+	
+//Hearts
+	public static int healthMax = 3;
+	public static int health = healthMax;
+	public static int textureHeart = R.drawable.heart;
+	public static Object[] Hearts = new Object[healthMax];
+	public static float heartWidth = 0.1f;
+	public static float heartHeight;// liczone w renderze 
+	public static float heartXstart = 0.015f;
+	public static float heartXoffset = heartWidth/4f;
+	public static float heartYoffset = heartXstart;
 
 //Line
 	public static Vector<Pair<Float, Float>> pLine;

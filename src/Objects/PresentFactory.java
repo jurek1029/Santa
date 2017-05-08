@@ -112,7 +112,15 @@ public class PresentFactory {
           	
             p.draw();
 
-            if (p.y<-Engine.presentMaxSize-0.1f) it.remove();
+            if (p.y < -Engine.presentMaxSize-0.1f) 
+            {
+            	if(p.signs.size() > 0)
+            	{
+            		Engine.health--;
+            		Engine.vib.vibrate(100);
+            	}
+            	it.remove();
+            }
         }
         
         GLES20.glUseProgram(GLES2Renderer.mProgramHandle); 	

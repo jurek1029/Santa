@@ -14,11 +14,17 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Pair;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,15 +39,14 @@ public class SantaActivity extends Activity {
 	boolean sound=true;
 	MediaPlayer mp;
 	// temp
-	TextView tv,bestScore;
+	TextView tv,bestScore,endScore;
 	public static TextView score;
 	ImageButton playButton,soundButton,pausePlayButton,pauseSoundButton;
 	TextView title;
 	ImageView pauseBG;
 	
 	AlphaAnimation animIN ,animOUT;
-	
-	
+	ScaleAnimation animScIN, animScOUT;	
 	
 	
     @SuppressLint("NewApi") @Override
@@ -65,13 +70,33 @@ public class SantaActivity extends Activity {
 		SharedPreferences settings = getSharedPreferences("best", 0);
 	    Engine.bestScore = settings.getInt("bestScore", 0);
 		sound = settings.getBoolean("Sound",true);
-	  
+		Engine.MainActivity = this;
+		Engine.vib = (Vibrator) Engine.ctx.getSystemService(Context.VIBRATOR_SERVICE);
         //-------------------------------------Menu--------------------------------------------       
         
 		animIN = new AlphaAnimation(0.0f, 1.0f);
 		animIN.setDuration(300);
 		animOUT = new AlphaAnimation(1.0f, 0f);
 		animOUT.setDuration(300);
+		animOUT.setFillAfter(false);
+		
+		animScIN = new ScaleAnimation(1, 0.9f, 1, 0.9f,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+		animScIN.setDuration(80);
+		animScIN.setFillAfter(true);
+		
+		animScOUT = new ScaleAnimation(0.9f, 1, 0.9f, 1,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+		animScOUT.setDuration(50);
+		animScOUT.setFillAfter(true);
+		animScOUT.setAnimationListener(new AnimationListener() {
+			public void onAnimationStart(Animation arg0) {}
+			public void onAnimationRepeat(Animation arg0) {}
+			public void onAnimationEnd(Animation arg0) {
+				if(!Engine.inGame)
+					play();
+				else
+					playFromPause();
+			}
+		});
 		
         setContentView(R.layout.menu_layout);
         gameView = (GameView)findViewById(R.id.menuView1);
@@ -90,6 +115,9 @@ public class SantaActivity extends Activity {
         score.setTypeface(font);
         score.bringToFront();
         
+        endScore = (TextView)findViewById(R.id.endScore);
+        endScore.setTypeface(font);
+        
         mp = MediaPlayer.create(this,R.raw.music);
 		mp.setLooping(true);
 
@@ -102,84 +130,22 @@ public class SantaActivity extends Activity {
 		initSoundButtons();
 
         playButton = (ImageButton)findViewById(R.id.StartButton);
-
-        playButton.setOnClickListener(new View.OnClickListener() {	
-			@Override
-			public void onClick(View arg0) 
-			{
-				Engine.inGame = true;
-				//setContentView(R.layout.activity_santa);	
-		       	Engine.animationType = 1;							
-				
-		        score.setText("Score: "+Engine.score);
-		        score.setVisibility(View.VISIBLE);
-		        score.startAnimation(animIN);
-		        
-		        playButton.setEnabled(false);
-		        playButton.setVisibility(View.GONE);
-		        playButton.startAnimation(animOUT);
-		        
-		        soundButton.setEnabled(false);
-		        soundButton.setVisibility(View.GONE);
-		        soundButton.startAnimation(animOUT);
-		        
-		        title.setVisibility(View.GONE);
-		        title.startAnimation(animOUT);
-		        
-		        bestScore.setVisibility(View.GONE);
-		        bestScore.startAnimation(animOUT);
-		        
-		        pausePlayButton.setEnabled(false);
-		        pausePlayButton.setVisibility(View.GONE);
-		       // pausePlayButton.startAnimation(animOUT);
-		        
-		        pauseSoundButton.setEnabled(false);
-		        pauseSoundButton.setVisibility(View.GONE);
-		      //  pauseSoundButton.startAnimation(animOUT);
-		        
-		        pauseBG.setVisibility(View.GONE);
-		      //  pauseBG.startAnimation(animOUT);
-		        
+        playButton.setOnTouchListener(new OnTouchListener() {
+			public boolean onTouch(View arg0, MotionEvent arg1) {
+				if(arg1.getAction() == MotionEvent.ACTION_DOWN){playButton.startAnimation(animScIN);}
+				if(arg1.getAction() == MotionEvent.ACTION_UP){playButton.startAnimation(animScOUT);}
+				return false;
 			}
 		});
         playButton.bringToFront();
-
-        pausePlayButton.setOnClickListener(new View.OnClickListener() {	
-			@Override
-			public void onClick(View arg0) 
-			{
-				System.out.println("clicked");
-				Engine.paused = false;
-				
-		        score.setText("Score: "+Engine.score);
-		        score.setVisibility(View.VISIBLE);
-		        
-		        playButton.setEnabled(false);
-		        playButton.setVisibility(View.GONE);
-		       // playButton.startAnimation(animOUT);
-		        
-		        soundButton.setEnabled(false);
-		        soundButton.setVisibility(View.GONE);
-		       // soundButton.startAnimation(animOUT);
-		        
-		        title.setVisibility(View.GONE);
-		       // title.startAnimation(animOUT);
-		        bestScore.setVisibility(View.GONE);
-		        
-		        pausePlayButton.setEnabled(false);
-		        pausePlayButton.setVisibility(View.GONE);
-		        pausePlayButton.startAnimation(animOUT);
-		        
-		        pauseSoundButton.setEnabled(false);
-		        pauseSoundButton.setVisibility(View.GONE);
-		        pauseSoundButton.startAnimation(animOUT);
-		        
-		        pauseBG.setVisibility(View.GONE);
-		        pauseBG.startAnimation(animOUT);
-		        
+        
+        pausePlayButton.setOnTouchListener(new OnTouchListener() {
+			public boolean onTouch(View arg0, MotionEvent arg1) {
+				if(arg1.getAction() == MotionEvent.ACTION_DOWN){pausePlayButton.startAnimation(animScIN);}
+				if(arg1.getAction() == MotionEvent.ACTION_UP){pausePlayButton.startAnimation(animScOUT);}
+				return false;
 			}
 		});
-        
         
         //---------------------------------Ladowanie gry--------------------------------------- 
 		
@@ -482,4 +448,190 @@ public class SantaActivity extends Activity {
 		pauseSoundButton.bringToFront();
 	}
 
+	public void endScreen()
+	{
+		Engine.fadingDuration = 120;
+		Engine.animationType = 2;	
+		
+		
+		
+		Engine.health = Engine.healthMax;	
+		Engine.paused = false;
+		
+		new Thread(new Runnable() {
+			public void run() {
+				final AlphaAnimation animIN2,animOUT2;
+				animIN2 = new AlphaAnimation(0.0f, 1.0f);
+				animIN2.setDuration(1000);
+				animOUT2 = new AlphaAnimation(1f, 0f); // idfk jak bylo aminOUT to nie dzia³a³o 
+				animOUT2.setDuration(300);
+				endScore.post(new Runnable() {
+					public void run() {
+						endScore.setText("Score : "+Engine.score);
+						endScore.setVisibility(View.VISIBLE);
+						endScore.startAnimation(animIN2);
+					}
+				});
+				try {
+					Thread.sleep(1700);
+				} catch (InterruptedException e) {e.printStackTrace();}
+				endScore.post(new Runnable() {
+					public void run() {					
+						endScore.setVisibility(View.INVISIBLE);
+						endScore.startAnimation(animOUT2);
+					}
+				});		
+			}
+		}).start();
+		
+		if(Engine.score > Engine.bestScore)
+		{
+			SharedPreferences settings = getSharedPreferences("best", 0);
+		    SharedPreferences.Editor editor = settings.edit();
+		    editor.putInt("bestScore", Engine.score);
+		    editor.commit();
+		    Engine.bestScore = Engine.score; 			    
+		}
+		Engine.score = 0;
+		
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				Engine.fadingDuration = 15;
+				
+				title.post(new Runnable() {
+					public void run() {
+						title.setVisibility(View.VISIBLE);
+						title.startAnimation(animIN);
+					}
+				});
+				
+				bestScore.post(new Runnable() {
+					public void run() {
+						bestScore.setVisibility(View.VISIBLE);
+				        bestScore.startAnimation(animIN);
+				        bestScore.setText("Best Score : "+Engine.bestScore);
+					}
+				});
+				
+				soundButton.post(new Runnable() {
+					public void run() {
+						soundButton.setEnabled(true);
+						soundButton.setVisibility(View.VISIBLE);
+						soundButton.startAnimation(animIN);
+					}
+				});
+				
+				playButton.post(new Runnable() {
+					public void run() {
+						playButton.setEnabled(true);
+						playButton.setVisibility(View.VISIBLE);
+						playButton.startAnimation(animIN);
+					}
+				});
+			
+				score.post(new Runnable() {
+					public void run() {
+						score.setVisibility(View.GONE);
+						score.startAnimation(animOUT);
+					}
+				});
+				
+				pausePlayButton.post(new Runnable() {
+					public void run() {
+						pausePlayButton.setEnabled(false);
+				        pausePlayButton.setVisibility(View.GONE);
+					}
+				});
+		        
+				pauseSoundButton.post(new Runnable() {
+					public void run() {
+				        pauseSoundButton.setEnabled(false);
+				        pauseSoundButton.setVisibility(View.GONE);
+					}
+				});
+		        
+				pauseBG.post(new Runnable() {
+					public void run() {
+				        pauseBG.setVisibility(View.GONE);
+					}
+				});
+				
+			}
+		}).start();
+		
+
+	}
+	
+	public void play()
+	{
+		Engine.inGame = true;
+		//setContentView(R.layout.activity_santa);	
+       	Engine.animationType = 1;							
+		
+        score.setText("Score: "+Engine.score);
+        score.setVisibility(View.VISIBLE);
+        score.startAnimation(animIN);
+        
+        playButton.setEnabled(false);
+        playButton.setVisibility(View.GONE);
+        playButton.startAnimation(animOUT);
+        
+        soundButton.setEnabled(false);
+        soundButton.setVisibility(View.GONE);
+        soundButton.startAnimation(animOUT);
+        
+        title.setVisibility(View.GONE);
+        title.startAnimation(animOUT);
+        
+        bestScore.setVisibility(View.GONE);
+        bestScore.startAnimation(animOUT);
+        
+        pausePlayButton.setEnabled(false);
+        pausePlayButton.setVisibility(View.GONE);
+       // pausePlayButton.startAnimation(animOUT);
+        
+        pauseSoundButton.setEnabled(false);
+        pauseSoundButton.setVisibility(View.GONE);
+      //  pauseSoundButton.startAnimation(animOUT);
+        
+        pauseBG.setVisibility(View.GONE);
+      //  pauseBG.startAnimation(animOUT);
+	}
+	
+	public void playFromPause()
+	{
+		System.out.println("clicked");
+		Engine.paused = false;
+		
+        score.setText("Score: "+Engine.score);
+        score.setVisibility(View.VISIBLE);
+        
+        playButton.setEnabled(false);
+        playButton.setVisibility(View.GONE);
+       // playButton.startAnimation(animOUT);
+        
+        soundButton.setEnabled(false);
+        soundButton.setVisibility(View.GONE);
+       // soundButton.startAnimation(animOUT);
+        
+        title.setVisibility(View.GONE);
+       // title.startAnimation(animOUT);
+        bestScore.setVisibility(View.GONE);
+        
+        pausePlayButton.setEnabled(false);
+        pausePlayButton.setVisibility(View.GONE);
+        pausePlayButton.startAnimation(animOUT);
+        
+        pauseSoundButton.setEnabled(false);
+        pauseSoundButton.setVisibility(View.GONE);
+        pauseSoundButton.startAnimation(animOUT);
+        
+        pauseBG.setVisibility(View.GONE);
+        pauseBG.startAnimation(animOUT);
+	}
 }

@@ -109,4 +109,15 @@
         android:textColor="#ffffff"
         android:textSize="30sp"/>
 
+    <TextView
+        android:id="@+id/endScore"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="Score:" 
+        android:textColor="#ffffff"
+        android:textSize="60sp"/>
+
 </RelativeLayout>

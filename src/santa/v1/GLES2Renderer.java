@@ -13,6 +13,7 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.opengl.GLSurfaceView.Renderer;
 import android.util.Pair;
+import android.view.TextureView;
 
 public class GLES2Renderer implements Renderer
 {
@@ -114,7 +115,13 @@ public class GLES2Renderer implements Renderer
 	    	}
 			
 		    Engine.pf.drawPresents();
-		    	
+		    if(Engine.health > 0)
+		    {
+			   drawHearts();
+			   
+		    }
+		    else Engine.MainActivity.endScreen();
+		    
 	    	if(Engine.update)
 			{
 	    		mColor = new float[]{1,1,0,(float)Engine.animationCounter/(float)Engine.fadingDuration};
@@ -244,6 +251,32 @@ public class GLES2Renderer implements Renderer
 		
 		SantaActivity.gameView.load();
 		mWrapTextureHandle = Graphic.loadTextureGLES2(Engine.ctx, R.drawable.present_temp);
+		Engine.heartHeight = Engine.heartWidth*Engine.width/Engine.height;
+		Engine.heartYoffset = Engine.heartXstart*Engine.width/Engine.height;
+		for(int i = 0; i < Engine.health ; i++)
+		{
+			Engine.Hearts[i] = new Objects.Object(Engine.textureHeart);
+			Engine.Hearts[i].x = Engine.heartXstart + (Engine.heartXoffset + Engine.heartWidth) * i;
+			Engine.Hearts[i].y = 1 - Engine.heartHeight - Engine.heartYoffset;
+		}
+		
+		
 	 }
+	
+	public void drawHearts()
+	{
+		for(int i = 0; i < Engine.health;i++)
+	    {
+	    	Matrix.setIdentityM(mTextureMatrix,0);
+	    	Matrix.setIdentityM(mModelMatrix, 0); 
+	    	Matrix.translateM(GLES2Renderer.mModelMatrix,0,Engine.Hearts[i].x,Engine.Hearts[i].y,0);
+	        Matrix.scaleM(GLES2Renderer.mModelMatrix,0,Engine.heartWidth,Engine.heartHeight,1);
+	        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, Engine.Hearts[i].textureHandle);
+	        GLES20.glUniform1i(GLES2Renderer.mTextureUniformHandle, 0);
+	    	Engine.Hearts[i].draw();
+	    }
+		
+	}
 
 }
