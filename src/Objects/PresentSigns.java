@@ -70,6 +70,7 @@ public class PresentSigns {
         for (int i=0; i<signsNumber; i++)
         {
             int n= rand.nextInt(Engine.shapes.size());
+            if(n > 1)signsNumber--; // wagi dla znakow
             vect.add(n);
         }
 

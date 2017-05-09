@@ -24,7 +24,7 @@ public class PresentFactory {
 
     int textureHandle;
     Random rand;
-    int presentMaxQuantity;
+    int presentMaxQuantity, presentUnPackCount;
 
 
     public PresentFactory() {
@@ -32,6 +32,8 @@ public class PresentFactory {
         rand=new Random();
         textureHandle=Engine.PCSpriteHandle;
         presentMaxQuantity = Engine.presentMaxQuantity;
+        presentUnPackCount = 0;
+        
 
     }
 
@@ -60,7 +62,11 @@ public class PresentFactory {
                 else if (p.signs.firstElement() == Engine.currentShape.ordinal())
                 {
                     p.signs.remove(0);
-                    if (p.signs.size() == 0) SantaActivity.score.setText("Score: "+ ++Engine.score);
+                    if (p.signs.size() == 0)
+                    {
+                    	SantaActivity.score.setText("Score: "+ ++Engine.score);
+                    	presentUnPackCount--;
+                    }
                 }
             }
             }
@@ -179,11 +185,16 @@ public class PresentFactory {
 
     public void spawn()
     {
-        if (rand.nextFloat()<0.5f || Engine.vPresents.size()>=presentMaxQuantity) return;
+        //if (rand.nextFloat()<0.5f || Engine.vPresents.size()>=presentMaxQuantity) return;
+    	if (rand.nextFloat()<0.5f || presentUnPackCount >=presentMaxQuantity) return;
 
         int n = rand.nextInt(Engine.vSpawnLocation.size());
         SpawnLocation s = Engine.vSpawnLocation.get(n);
-        if (s.canSpawn()) spawnPresent(s);
+        if (s.canSpawn())
+        {
+        	spawnPresent(s);
+        	presentUnPackCount++;
+        }
 
     }
 
