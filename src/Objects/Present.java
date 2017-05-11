@@ -19,7 +19,7 @@ public class Present extends Object {
     float textureYpos;
     float textureScale;
 
-    Vector<Integer> signs;
+    public Vector<Integer> signs;
     public float startingSignsCount;
     public float rotationFull90;
     public int lastCollision;

@@ -16,6 +16,7 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.util.Pair;
 import android.view.Display;
@@ -667,9 +668,16 @@ public class SantaActivity extends Activity {
 	    TutorialText.setVisibility(View.VISIBLE);
 	    TutorialText.startAnimation(animIN);
 	    
+	    Engine.inTutorialDrawSigns = false;
 	    Engine.TutorialCurrentState = TutorialState.Screen1;
-	    TutorialText.animateText("To jest nie zapakowany            prezent, nie mo¿esz pozwaliæ \naby z taœmoci¹gu spad³y nie   zapakowane prezenty  ");
+	    new Handler().postDelayed(new Runnable() {
+			public void run() {
+				TutorialText.animateText("To jest nie zapakowany            prezent, nie mo¿esz pozwaliæ \naby z taœmoci¹gu spad³y nie   zapakowane prezenty  ");
+				//-----------------------|----------------------------------|
+			}
+		}, 800);
 	    
+	   
 	}
 	
 	private Engine.TutorialState nextState()

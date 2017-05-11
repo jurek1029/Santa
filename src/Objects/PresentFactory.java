@@ -144,7 +144,7 @@ public class PresentFactory {
 
              Matrix.setIdentityM(GLES2Renderer.mTextureMatrix,0);
     	
-             Engine.ps.drawSigns(p);
+             if(Engine.inTutorialDrawSigns) Engine.ps.drawSigns(p);
         }
 
     }

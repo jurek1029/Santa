@@ -1,0 +1,21 @@
+uniform mat4 u_MVPMatrix;       
+uniform mat4 u_MVMatrix;      
+uniform float ratio;
+uniform vec2 center;
+ 
+attribute vec4 a_Position;          
+ 
+varying vec2 v_Position;       
+varying vec3 v_Color;  
+varying vec2 v_center;              
+ 
+// The entry point for our vertex shader.
+void main()
+{
+    v_Position =  vec2(a_Position.x,a_Position.y/ratio);
+    v_center = vec2(center.x, center.y/ratio);
+ 
+    v_Color = vec3(52.0/255.0, 52.0/255.0, 52.0/255.0);
+ 
+    gl_Position = u_MVPMatrix * a_Position;
+}

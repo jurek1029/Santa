@@ -9,6 +9,7 @@ import javax.microedition.khronos.opengles.GL10;
 import santa.v1.Engine.TutorialState;
 
 import Objects.ConveyorBelt;
+import Objects.GrayOverlay;
 import Objects.Present;
 import Objects.SpawnLocation;
 import android.annotation.SuppressLint;
@@ -45,6 +46,7 @@ public class GLES2Renderer implements Renderer
 	
 	public static int mWrapTextureHandle;
 	
+	public static int mGrayCenter,mGrayRadiousMin,mGrayRadiousMax,mGrayAlphaMin,mGrayAlphaMax;
 	
 	public static final float[] mLightPosInModelSpace = new float[] {0.0f, 0.0f, 0.0f, 1.0f};
 	public static final float[] mLightPosInWorldSpace = new float[4];
@@ -53,6 +55,9 @@ public class GLES2Renderer implements Renderer
 	public static int mProgramHandle;
 	public static int mProgramPercentHandle;
 	public static int mProgramLineHandle;
+	int mProgramGray;
+	
+	GrayOverlay mGrayOverlay;
 	
 	private long loopStart = 0;
 	private long loopEnd = 0;
@@ -256,6 +261,15 @@ public class GLES2Renderer implements Renderer
 		mProgramLineHandle = Graphic.createAndLinkProgram(vertexShaderHandle, fragmentShaderHandle, 
 				new String[] {"a_Position"});
 		
+		vertexShader = RawResourceReader.readTextFileFromRawResource(mActivityContext, R.raw.vertex_shader_gray_overlay);
+		fragmentShader = RawResourceReader.readTextFileFromRawResource(mActivityContext, R.raw.fragment_shader_gray_overlay);		
+		
+		vertexShaderHandle = Graphic.compileShader(GLES20.GL_VERTEX_SHADER, vertexShader);
+		fragmentShaderHandle = Graphic.compileShader(GLES20.GL_FRAGMENT_SHADER, fragmentShader);
+		
+		mProgramGray = Graphic.createAndLinkProgram(vertexShaderHandle, fragmentShaderHandle, 
+				new String[] {"a_Position"});
+		
 		SantaActivity.gameView.load();
 		mWrapTextureHandle = Graphic.loadTextureGLES2(Engine.ctx, R.drawable.present_temp);
 		Engine.heartHeight = Engine.heartWidth*Engine.width/Engine.height;
@@ -267,7 +281,7 @@ public class GLES2Renderer implements Renderer
 			Engine.Hearts[i].y = 1 - Engine.heartHeight - Engine.heartYoffset;
 		}
 		
-		
+		mGrayOverlay = new GrayOverlay();
 	 }
 	
 	private void drawHearts()
@@ -283,6 +297,23 @@ public class GLES2Renderer implements Renderer
 	        GLES20.glUniform1i(GLES2Renderer.mTextureUniformHandle, 0);
 	    	Engine.Hearts[i].draw();
 	    }	
+	}
+	
+	private void drawGrayOverlay(float centerX,float centerY, float radMin, float radMax, float alphaMin, float alphaMax)
+	{
+		GLES20.glUseProgram(mProgramGray); 	
+		mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgramGray, "u_MVPMatrix");
+		mMVMatrixHandle = GLES20.glGetUniformLocation(mProgramGray, "u_MVMatrix"); 
+		mPositionHandle = GLES20.glGetAttribLocation(mProgramGray, "a_Position");
+		mGrayCenter = GLES20.glGetUniformLocation(mProgramGray, "center");
+		mGrayRadiousMin = GLES20.glGetUniformLocation(mProgramGray, "radiousMin");
+		mGrayRadiousMax = GLES20.glGetUniformLocation(mProgramGray, "radiousMax");
+		mGrayAlphaMin = GLES20.glGetUniformLocation(mProgramGray, "alphaMin");
+		mGrayAlphaMax = GLES20.glGetUniformLocation(mProgramGray, "alphaMax");
+		Matrix.setIdentityM(mModelMatrix, 0);
+		GLES20.glUniform1f(GLES20.glGetUniformLocation(mProgramGray, "ratio"),(float)Engine.width/(float)Engine.height);
+		mGrayOverlay.draw(centerX, centerY, radMin, radMax, alphaMin, alphaMax);
+		
 	}
 	
 	private void drawTutorial()
@@ -310,8 +341,8 @@ public class GLES2Renderer implements Renderer
 	
 	private void drawTutorialScreen1()
 	{
-		Engine.vPresents.add(new Present(0.5f,0.5f,0.15f,0,Engine.PCSpriteHandle));
-		
+		Engine.vPresents.add(new Present(0.4f,0.611f,0.2f,0,Engine.PCSpriteHandle));
+		drawGrayOverlay(0.5f, 0.66f, 0.15f, 0.25f, 0.75f, 0);
 	}
 	
 	private void drawTutorialScreen2()
