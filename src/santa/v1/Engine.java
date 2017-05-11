@@ -39,6 +39,14 @@ public class Engine
 	public static float heartXoffset = heartWidth/4f;
 	public static float heartYoffset = heartXstart;
 
+//Tutorial 
+	public static enum TutorialState{
+		Null,Screen1,Screen2,Screen3,Screen4,Return
+	}
+	public static TutorialState TutorialCurrentState = TutorialState.Null;
+	public static boolean inTutorial= false;
+	public static int TutorialTextScrollCounter =0;
+	
 //Line
 	public static Vector<Pair<Float, Float>> pLine;
 	public static int minDeltaToRegisterMove = 3;

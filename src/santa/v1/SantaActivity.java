@@ -2,6 +2,8 @@ package santa.v1;
 
 import java.util.Vector;
 
+import santa.v1.Engine.TutorialState;
+
 import Shapes.NormShape;
 import Shapes.Shapes;
 import android.annotation.SuppressLint;
@@ -25,6 +27,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.ScaleAnimation;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,7 +45,9 @@ public class SantaActivity extends Activity {
 	TextView tv,bestScore,endScore;
 	public static TextView score;
 	ImageButton playButton,soundButton,pausePlayButton,pauseSoundButton;
+	Button btnTutorial;
 	TextView title;
+	public static Typewriter TutorialText;
 	ImageView pauseBG;
 	
 	AlphaAnimation animIN ,animOUT;
@@ -147,6 +152,16 @@ public class SantaActivity extends Activity {
 			}
 		});
         
+        btnTutorial = (Button)findViewById(R.id.buttonTutorial);
+        btnTutorial.setOnClickListener(new OnClickListener() {
+			public void onClick(View arg0) {
+				startTutorial();
+			}
+		});
+        
+        TutorialText = (Typewriter)findViewById(R.id.textViewTutorial);
+        TutorialText.setTypeface(font);
+        
         //---------------------------------Ladowanie gry--------------------------------------- 
 		
 
@@ -176,6 +191,10 @@ public class SantaActivity extends Activity {
 				{
 					Engine.pLine.add(new Pair<Float, Float>(x, y));
 					Engine.update = true;
+				}
+				else if (Engine.inTutorial)
+				{
+					Engine.TutorialCurrentState = nextState();
 				}
 				break;
 			}			
@@ -237,14 +256,13 @@ public class SantaActivity extends Activity {
     public void onBackPressed() 
     {
     	
-    	if(Engine.inGame)
+    	if(Engine.inGame || Engine.inTutorial)
     	{  		
-    		if(Engine.paused)
+    		if(Engine.paused || Engine.inTutorial)//-------------------------loadmenu
     		{	
-    			//loadmenu
-    			
     			//Engine.vPresents.clear();
-    			
+    			Engine.inTutorial = false;
+    			Engine.TutorialCurrentState = TutorialState.Null;
     			Engine.animationType = 2;	
     			
     			if(Engine.score > Engine.bestScore)
@@ -287,11 +305,14 @@ public class SantaActivity extends Activity {
 		        pauseBG.setVisibility(View.GONE);
 		      //  pauseBG.startAnimation(animOUT);
 	    		
+		        btnTutorial.setEnabled(true);
+		        btnTutorial.setVisibility(View.VISIBLE);
+		        btnTutorial.startAnimation(animIN);
+		        
 	            setSoundBtnListeners();
     		}
-    		else
-    		{
-    			//loadpausemenu
+    		else//-------------------------------------loadpausemenu
+    		{ 			
     			Engine.paused = true;
     			
     			title.setVisibility(View.GONE);
@@ -577,30 +598,13 @@ public class SantaActivity extends Activity {
         score.setVisibility(View.VISIBLE);
         score.startAnimation(animIN);
         
-        playButton.setEnabled(false);
-        playButton.setVisibility(View.GONE);
+        setMenuVisibilyGone();
+        
         playButton.startAnimation(animOUT);
-        
-        soundButton.setEnabled(false);
-        soundButton.setVisibility(View.GONE);
         soundButton.startAnimation(animOUT);
-        
-        title.setVisibility(View.GONE);
         title.startAnimation(animOUT);
-        
-        bestScore.setVisibility(View.GONE);
         bestScore.startAnimation(animOUT);
-        
-        pausePlayButton.setEnabled(false);
-        pausePlayButton.setVisibility(View.GONE);
-       // pausePlayButton.startAnimation(animOUT);
-        
-        pauseSoundButton.setEnabled(false);
-        pauseSoundButton.setVisibility(View.GONE);
-      //  pauseSoundButton.startAnimation(animOUT);
-        
-        pauseBG.setVisibility(View.GONE);
-      //  pauseBG.startAnimation(animOUT);
+        btnTutorial.startAnimation(animOUT);
 	}
 	
 	public void playFromPause()
@@ -611,27 +615,78 @@ public class SantaActivity extends Activity {
         score.setText("Score: "+Engine.score);
         score.setVisibility(View.VISIBLE);
         
-        playButton.setEnabled(false);
-        playButton.setVisibility(View.GONE);
-       // playButton.startAnimation(animOUT);
+        setMenuVisibilyGone();
         
+        pausePlayButton.startAnimation(animOUT);        
+        pauseSoundButton.startAnimation(animOUT);      
+        pauseBG.startAnimation(animOUT);       
+        
+	}
+	
+	private void setMenuVisibilyGone()
+	{
+		playButton.setEnabled(false);
+        playButton.setVisibility(View.GONE);
+               
         soundButton.setEnabled(false);
         soundButton.setVisibility(View.GONE);
-       // soundButton.startAnimation(animOUT);
-        
+                
         title.setVisibility(View.GONE);
-       // title.startAnimation(animOUT);
+                
         bestScore.setVisibility(View.GONE);
-        
+            
         pausePlayButton.setEnabled(false);
         pausePlayButton.setVisibility(View.GONE);
-        pausePlayButton.startAnimation(animOUT);
         
         pauseSoundButton.setEnabled(false);
-        pauseSoundButton.setVisibility(View.GONE);
-        pauseSoundButton.startAnimation(animOUT);
+        pauseSoundButton.setVisibility(View.GONE);  
         
         pauseBG.setVisibility(View.GONE);
-        pauseBG.startAnimation(animOUT);
+        
+        btnTutorial.setEnabled(false);
+        btnTutorial.setVisibility(View.GONE);       
+	}
+	
+	
+	private void startTutorial()
+	{
+		Engine.inTutorial = true;
+		Engine.inGame = true;
+		Engine.paused = true;
+		
+		Engine.animationType = 1;
+		
+		setMenuVisibilyGone();
+		
+		playButton.startAnimation(animOUT);
+	    soundButton.startAnimation(animOUT);
+	    title.startAnimation(animOUT);
+	    bestScore.startAnimation(animOUT);
+	    btnTutorial.startAnimation(animOUT);
+	    
+	    TutorialText.setVisibility(View.VISIBLE);
+	    TutorialText.startAnimation(animIN);
+	    
+	    Engine.TutorialCurrentState = TutorialState.Screen1;
+	    TutorialText.animateText("To jest nie zapakowany            prezent, nie mo¿esz pozwaliæ \naby z taœmoci¹gu spad³y nie   zapakowane prezenty  ");
+	    
+	}
+	
+	private Engine.TutorialState nextState()
+	{
+		switch (Engine.TutorialCurrentState) {
+		case Return:
+			return TutorialState.Null;
+		case Screen1:
+			TutorialText.animateText("Aby zapakowaæ znaczek nale¿y narysowaæ symbol na prezentem");
+			return TutorialState.Screen2;
+		case Screen2:
+			return TutorialState.Screen3;
+		case Screen3:
+			return TutorialState.Screen4;
+		case Screen4:
+			return TutorialState.Return;
+		}
+		return TutorialState.Null;
 	}
 }

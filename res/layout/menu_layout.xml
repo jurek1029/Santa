@@ -120,4 +120,23 @@
         android:textColor="#ffffff"
         android:textSize="60sp"/>
 
+    <Button
+        android:id="@+id/buttonTutorial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="66dp"
+        android:text="Tutorial" />
+
+    <santa.v1.Typewriter
+         android:id="@+id/textViewTutorial"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="25px"
+        android:layout_marginRight="25px"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:textSize="22sp"
+        android:visibility="gone" />
+
 </RelativeLayout>

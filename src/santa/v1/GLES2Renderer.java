@@ -6,7 +6,11 @@ import java.util.Vector;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import santa.v1.Engine.TutorialState;
+
 import Objects.ConveyorBelt;
+import Objects.Present;
+import Objects.SpawnLocation;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.opengl.GLES20;
@@ -93,7 +97,7 @@ public class GLES2Renderer implements Renderer
 		//	GLES20.glUseProgram(mProgramHandle); 	
 	    //	getLocations(mProgramHandle);
 	    	
-			if(Engine.animationType == 1)
+			if(Engine.animationType == 1) // -------------------animacje fadeIN fadeOUT-----------------------------------
 			{
 				if(Engine.animationCounter < Engine.fadingDuration)++Engine.animationCounter;
 			}
@@ -104,11 +108,12 @@ public class GLES2Renderer implements Renderer
 					{Engine.inGame = false; Engine.pf.backToBeginning();}
 			}
 			mColor = new float[]{1,1,1,(float)Engine.animationCounter/(float)Engine.fadingDuration};
+			//------------------------------------------------------------------------------------------------------------
 			
 	    	for(ConveyorBelt cb : Engine.vCBelt)
 	    		cb.draw();
 	
-	    	if(!Engine.paused)
+	    	if(!Engine.paused && !Engine.inTutorial)
 	    	{
 				Engine.pf.spawn();
 				Engine.pf.makeGameHarder();
@@ -122,7 +127,9 @@ public class GLES2Renderer implements Renderer
 		    }
 		    else Engine.MainActivity.endScreen();
 		    
-	    	if(Engine.update)
+	    	drawTutorial();
+		    
+	    	if(Engine.update) // --------------------------------rysowanie lini------------------------------------------
 			{
 	    		mColor = new float[]{1,1,0,(float)Engine.animationCounter/(float)Engine.fadingDuration};
 	    		Engine.line.updateVertices((Vector<Pair<Float, Float>>) Engine.pLine.clone());
@@ -131,7 +138,7 @@ public class GLES2Renderer implements Renderer
 		    	Matrix.setIdentityM(mModelMatrix, 0); 
 		    	Engine.line.draw();
 		    	mColor = new float[]{1,1,1,(float)Engine.animationCounter/(float)Engine.fadingDuration};
-			}
+			} // --------------------------------------------------------------------------------------------------------
 	    	
 			if(Engine.resumed>0)
 			{
@@ -263,7 +270,7 @@ public class GLES2Renderer implements Renderer
 		
 	 }
 	
-	public void drawHearts()
+	private void drawHearts()
 	{
 		for(int i = 0; i < Engine.health;i++)
 	    {
@@ -275,8 +282,51 @@ public class GLES2Renderer implements Renderer
 	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, Engine.Hearts[i].textureHandle);
 	        GLES20.glUniform1i(GLES2Renderer.mTextureUniformHandle, 0);
 	    	Engine.Hearts[i].draw();
-	    }
+	    }	
+	}
+	
+	private void drawTutorial()
+	{
+		switch (Engine.TutorialCurrentState) 
+		{
+		case Null:			
+			break;
+		case Screen1:
+			drawTutorialScreen1();
+			break;
+		case Screen2:
+			drawTutorialScreen2();
+			break;
+		case Screen3:
+			drawTutorialScreen3();
+			break;
+		case Screen4:
+			drawTutorialScreen4();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	private void drawTutorialScreen1()
+	{
+		Engine.vPresents.add(new Present(0.5f,0.5f,0.15f,0,Engine.PCSpriteHandle));
 		
+	}
+	
+	private void drawTutorialScreen2()
+	{
+		Engine.vPresents.clear();
+	}
+	
+	private void drawTutorialScreen3()
+	{
+		
+	}
+	
+	private void drawTutorialScreen4()
+	{
+
 	}
 
 }
