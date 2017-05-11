@@ -45,7 +45,7 @@ public class Engine
 	}
 	public static TutorialState TutorialCurrentState = TutorialState.Null;
 	public static boolean inTutorial= false;
-	public static boolean inTutorialDrawSigns = false;
+	public static boolean inTutorialDrawSigns = true;
 	public static int TutorialTextScrollCounter =0;
 	
 //Line
