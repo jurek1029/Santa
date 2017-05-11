@@ -3,21 +3,24 @@ package santa.v1;
 import java.util.Vector;
 
 import santa.v1.Engine.TutorialState;
-
 import Shapes.NormShape;
 import Shapes.Shapes;
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ConfigurationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Pair;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -54,10 +57,20 @@ public class SantaActivity extends Activity {
 	AlphaAnimation animIN ,animOUT;
 	ScaleAnimation animScIN, animScOUT;	
 	
+    int permision;
 	
     @SuppressLint("NewApi") @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        
+        if (ContextCompat.checkSelfPermission(this,Manifest.permission.VIBRATE)!= PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.VIBRATE)) {
+
+            } else {
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.VIBRATE},permision);
+            }
+        }
         
         //-----------------------------------Device Info---------------------------------------
         
