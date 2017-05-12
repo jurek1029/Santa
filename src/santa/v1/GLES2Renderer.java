@@ -10,6 +10,7 @@ import santa.v1.Engine.TutorialState;
 
 import Objects.ConveyorBelt;
 import Objects.GrayOverlay;
+import Objects.Object;
 import Objects.Present;
 import Objects.SpawnLocation;
 import android.annotation.SuppressLint;
@@ -58,6 +59,8 @@ public class GLES2Renderer implements Renderer
 	int mProgramGray;
 	
 	GrayOverlay mGrayOverlay;
+	Objects.Object finger;
+	float tempx,tempy;
 	
 	private long loopStart = 0;
 	private long loopEnd = 0;
@@ -96,7 +99,7 @@ public class GLES2Renderer implements Renderer
     	
 		if(Engine.inGame)
 		{		
-			if(!Engine.paused)
+			if(!Engine.paused && !Engine.inTutorial)
 				Engine.gravity(loopRunTime);
 			
 		//	GLES20.glUseProgram(mProgramHandle); 	
@@ -282,6 +285,7 @@ public class GLES2Renderer implements Renderer
 		}
 		
 		mGrayOverlay = new GrayOverlay();
+		finger = new Object(Engine.TutorialFingerTexture);
 	 }
 	
 	private void drawHearts()
@@ -341,23 +345,86 @@ public class GLES2Renderer implements Renderer
 	
 	private void drawTutorialScreen1()
 	{
-		Engine.vPresents.add(new Present(0.4f,0.611f,0.2f,0,Engine.PCSpriteHandle));
-		drawGrayOverlay(0.5f, 0.66f, 0.15f, 0.25f, 0.75f, 0);
+		if(Engine.TutorialInit) {
+			Engine.vPresents.add(new Present(0.4f,0.611f,0.2f,0,Engine.PCSpriteHandle));
+			Engine.TutorialInit = false;
+		}
+		drawGrayOverlay(0.5f, Engine.TutorialGrayY, Engine.TutorialGrayRMin, Engine.TutorialGrayRMax, 0.75f, 0); // potencjalnie zmiana na dno 
 	}
 	
 	private void drawTutorialScreen2()
 	{
-		Engine.vPresents.clear();
+		if(Engine.TutorialInit) {
+			Engine.vPresents.get(0).signs.clear();
+			Engine.vPresents.get(0).startingSignsCount = 1;
+			Engine.vPresents.get(0).signs.add(2);
+			Engine.inTutorialDrawSigns = true;
+			Engine.TutorialInit = false;
+			Engine.pLine = new Vector<Pair<Float,Float>>();
+			Engine.update = true;
+			Engine.paused = false;
+		}
+		if(Engine.TutorialDrawAnim) {
+			if(Engine.TutorialAnimCounter < Engine.TutorialAnimLength) {
+				if(Engine.TutorialAnimCounter < Engine.TutorialAnimLength/2f) {
+					tempx = (float)Engine.TutorialAnimCounter/Engine.TutorialAnimLength*Engine.TutorialShapeSize;
+					tempy = -tempx + Engine.TutorialLeftPointY;
+					tempx += Engine.TutorialLeftPointX;
+					Engine.pLine.add(new Pair<Float, Float>(tempx*Engine.width, tempy*Engine.height));				
+				}
+				else {
+					tempx = (Engine.TutorialAnimCounter - Engine.TutorialAnimLength/2f)/Engine.TutorialAnimLength*Engine.TutorialShapeSize;
+					tempy = tempx + Engine.TutorialLeftPointY - Engine.TutorialShapeSize/2f;
+					tempx += Engine.TutorialLeftPointX + Engine.TutorialShapeSize/2f;
+					Engine.pLine.add(new Pair<Float, Float>(tempx*Engine.width, tempy*Engine.height));	
+					
+				}
+				Engine.TutorialAnimCounter++;
+			}
+			else{
+				Engine.TutorialAnimCounter = 0; // loopipul
+				Engine.pLine.clear();
+			}
+		}	
+		drawGrayOverlay(0.5f, Engine.TutorialGrayY, Engine.TutorialGrayRMin, Engine.TutorialGrayRMax, 0.75f, 0);
+		
+		if(Engine.TutorialDrawAnim) {	
+			GLES20.glUseProgram(mProgramHandle); 
+			getLocations(mProgramHandle);
+			Matrix.setIdentityM(mModelMatrix, 0);
+			Matrix.translateM(mModelMatrix, 0, tempx - 0.2f*Engine.TutorialFingerScale, tempy - (-0.2f*Engine.TutorialFingerScale+Engine.TutorialFingerScale)*Engine.width/Engine.height, 0.0f);
+			Matrix.scaleM(mModelMatrix, 0, Engine.TutorialFingerScale, Engine.TutorialFingerScale*Engine.width/Engine.height, 1);
+			Matrix.setIdentityM(mTextureMatrix,0);
+			GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, finger.textureHandle);
+		    GLES20.glUniform1i(GLES2Renderer.mTextureUniformHandle, 0);
+			finger.draw();
+		}			
 	}
 	
 	private void drawTutorialScreen3()
 	{
+		if(Engine.TutorialInit) {
+			Engine.vPresents.get(0).signs.clear();
+			Engine.vPresents.get(0).startingSignsCount = 2;
+			Engine.vPresents.get(0).signs.add(0);
+			Engine.vPresents.get(0).signs.add(2);
+			Engine.inTutorialDrawSigns = true;
+			Engine.TutorialInit = false;
+			Engine.update = false;
+			Engine.paused = true;
+		}
 		
+		drawGrayOverlay(0.5f, 0.76f, 0.1f, 0.15f, 0.75f, 0);
 	}
 	
 	private void drawTutorialScreen4()
 	{
-
+		if(Engine.TutorialInit) {
+			Engine.vPresents.clear();
+			Engine.TutorialInit = false;
+			Engine.paused = true;
+		}
 	}
 
 }

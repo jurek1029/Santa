@@ -3,6 +3,7 @@ package santa.v1;
 import java.util.Vector;
 
 import santa.v1.Engine.TutorialState;
+import Objects.Present;
 import Shapes.NormShape;
 import Shapes.Shapes;
 import android.Manifest;
@@ -46,15 +47,16 @@ public class SantaActivity extends Activity {
 	boolean sound=true;
 	MediaPlayer mp;
 	// temp
-	TextView tv,bestScore,endScore;
+	TextView tv,bestScore,endScore,newRecord;
 	public static TextView score;
 	ImageButton playButton,soundButton,pausePlayButton,pauseSoundButton;
 	Button btnTutorial;
 	TextView title;
 	public static Typewriter TutorialText;
+	static ImageButton btnSkip;
 	ImageView pauseBG;
 	
-	AlphaAnimation animIN ,animOUT;
+	static AlphaAnimation animIN ,animOUT;
 	ScaleAnimation animScIN, animScOUT;	
 	
     int permision;
@@ -101,11 +103,11 @@ public class SantaActivity extends Activity {
 		
 		animScIN = new ScaleAnimation(1, 0.9f, 1, 0.9f,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
 		animScIN.setDuration(80);
-		animScIN.setFillAfter(true);
+		//animScIN.setFillAfter(true);
 		
 		animScOUT = new ScaleAnimation(0.9f, 1, 0.9f, 1,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
 		animScOUT.setDuration(50);
-		animScOUT.setFillAfter(true);
+		//animScOUT.setFillAfter(true);
 		animScOUT.setAnimationListener(new AnimationListener() {
 			public void onAnimationStart(Animation arg0) {}
 			public void onAnimationRepeat(Animation arg0) {}
@@ -137,6 +139,9 @@ public class SantaActivity extends Activity {
         endScore = (TextView)findViewById(R.id.endScore);
         endScore.setTypeface(font);
         
+        newRecord = (TextView)findViewById(R.id.textViewNewRecord);
+        newRecord.setTypeface(font);
+        
         mp = MediaPlayer.create(this,R.raw.music);
 		mp.setLooping(true);
 
@@ -167,14 +172,24 @@ public class SantaActivity extends Activity {
 		});
         
         btnTutorial = (Button)findViewById(R.id.buttonTutorial);
+        btnTutorial.setTypeface(font);
         btnTutorial.setOnClickListener(new OnClickListener() {
 			public void onClick(View arg0) {
 				startTutorial();
+				btnTutorial.startAnimation(animScIN);
 			}
 		});
         
         TutorialText = (Typewriter)findViewById(R.id.textViewTutorial);
         TutorialText.setTypeface(font);
+        
+        btnSkip = (ImageButton)findViewById(R.id.imageButtonSkip);
+        btnSkip.setOnClickListener(new OnClickListener() {		
+			public void onClick(View arg0) {
+				btnSkip.startAnimation(animScIN);
+				TutorialText.nextLine();
+			}
+		});
         
         //---------------------------------Ladowanie gry--------------------------------------- 
 		
@@ -203,12 +218,21 @@ public class SantaActivity extends Activity {
 			{
 				if(Engine.inGame && !Engine.paused)
 				{
+					if(Engine.TutorialCurrentState == TutorialState.Screen2){
+						if(Engine.TutorialDrawAnim){
+							Engine.pLine.clear();
+							Engine.TutorialDrawAnim = false;
+							Engine.TutorialAnimCounter = 0;
+						}
+					}
 					Engine.pLine.add(new Pair<Float, Float>(x, y));
 					Engine.update = true;
+					
 				}
-				else if (Engine.inTutorial)
+				else if (Engine.inTutorial && Engine.TutorialTextFinished)
 				{
 					Engine.TutorialCurrentState = nextState();
+					
 				}
 				break;
 			}			
@@ -218,6 +242,7 @@ public class SantaActivity extends Activity {
 			}
 			case MotionEvent.ACTION_MOVE:
 			{
+				Engine.TutorialDrawAnim = false;
 				if(Engine.inGame && !Engine.paused)
 				{
 					if(Math.sqrt((Engine.pLine.lastElement().first - x) * (Engine.pLine.lastElement().first - x) + (Engine.pLine.lastElement().second - y) * (Engine.pLine.lastElement().second - y))
@@ -237,7 +262,10 @@ public class SantaActivity extends Activity {
 				//	tv.setText(Engine.currentShape.toString());
 					Engine.pLine.removeAllElements();
 					Engine.update = false;
-
+					if(Engine.TutorialCurrentState == TutorialState.Screen2){
+						Engine.TutorialDrawAnim = true;
+						Engine.update = true;
+					}
 					Engine.pf.checkSigns();
 				}
 				break;
@@ -277,6 +305,14 @@ public class SantaActivity extends Activity {
     			//Engine.vPresents.clear();
     			Engine.inTutorial = false;
     			Engine.TutorialCurrentState = TutorialState.Null;
+    			Engine.inTutorial= false;
+    			Engine.inTutorialDrawSigns = true;
+    			Engine.TutorialTextFinished = false;
+    			Engine.TutorialInit = true;
+    			Engine.TutorialAnimCounter = 0;
+    			Engine.TutorialDrawAnim = true;
+    			Engine.TutorialGrayY=0.66f;Engine.TutorialGrayRMin = 0.15f;Engine.TutorialGrayRMax = 0.25f;
+    			
     			Engine.animationType = 2;	
     			
     			if(Engine.score > Engine.bestScore)
@@ -289,7 +325,7 @@ public class SantaActivity extends Activity {
     			}
     			Engine.score = 0;
     			//Engine.inGame = false;    	
-    			Engine.paused = false;
+    			if(!Engine.inTutorial)Engine.paused = false;
 	    		title.setVisibility(View.VISIBLE);
 	    		title.startAnimation(animIN);
 	    		
@@ -322,6 +358,12 @@ public class SantaActivity extends Activity {
 		        btnTutorial.setEnabled(true);
 		        btnTutorial.setVisibility(View.VISIBLE);
 		        btnTutorial.startAnimation(animIN);
+		        
+		        TutorialText.setVisibility(View.GONE);
+		        TutorialText.startAnimation(animOUT);
+		        
+		        btnSkip.setVisibility(View.GONE);
+		        btnSkip.startAnimation(animOUT);
 		        
 	            setSoundBtnListeners();
     		}
@@ -502,6 +544,10 @@ public class SantaActivity extends Activity {
 				animOUT2.setDuration(300);
 				endScore.post(new Runnable() {
 					public void run() {
+						if(Engine.score > Engine.bestScore){
+							newRecord.setVisibility(View.VISIBLE);
+							newRecord.startAnimation(animIN2);
+						}
 						endScore.setText("Score : "+Engine.score);
 						endScore.setVisibility(View.VISIBLE);
 						endScore.startAnimation(animIN2);
@@ -511,7 +557,11 @@ public class SantaActivity extends Activity {
 					Thread.sleep(1700);
 				} catch (InterruptedException e) {e.printStackTrace();}
 				endScore.post(new Runnable() {
-					public void run() {					
+					public void run() {
+						if(newRecord.getVisibility() == View.VISIBLE){
+							newRecord.setVisibility(View.INVISIBLE);
+							newRecord.startAnimation(animOUT2);
+						}
 						endScore.setVisibility(View.INVISIBLE);
 						endScore.startAnimation(animOUT2);
 					}
@@ -624,7 +674,7 @@ public class SantaActivity extends Activity {
 	public void playFromPause()
 	{
 		System.out.println("clicked");
-		Engine.paused = false;
+		if (!Engine.inTutorial)Engine.paused = false;
 		
         score.setText("Score: "+Engine.score);
         score.setVisibility(View.VISIBLE);
@@ -681,32 +731,58 @@ public class SantaActivity extends Activity {
 	    TutorialText.setVisibility(View.VISIBLE);
 	    TutorialText.startAnimation(animIN);
 	    
+	    btnSkip.setVisibility(View.VISIBLE);
+	    btnSkip.startAnimation(animIN);
+	    
 	    Engine.inTutorialDrawSigns = false;
-	    Engine.TutorialCurrentState = TutorialState.Screen1;
+	    Engine.TutorialCurrentState = TutorialState.Screen1;	    
+	    
+	    TutorialText.setText("");
 	    new Handler().postDelayed(new Runnable() {
 			public void run() {
-				TutorialText.animateText("To jest nie zapakowany            prezent, nie mo¿esz pozwaliæ \naby z taœmoci¹gu spad³y nie   zapakowane prezenty  ");
-				//-----------------------|----------------------------------|
+				TutorialText.animateText("This is unwrapped gift,   you can not let \nunwrapped gifts to fall    from conveyor belt  ");
+				//-----------------------|--------------------------|-----------------|--------------------------|
 			}
 		}, 800);
 	    
 	   
 	}
 	
-	private Engine.TutorialState nextState()
+	public static Engine.TutorialState nextState()
 	{
+		Engine.TutorialTextFinished = false;
+		Engine.TutorialInit = true;
 		switch (Engine.TutorialCurrentState) {
 		case Return:
 			return TutorialState.Null;
 		case Screen1:
-			TutorialText.animateText("Aby zapakowaæ znaczek nale¿y narysowaæ symbol na prezentem");
+			Engine.TutorialGrayY=0.76f;Engine.TutorialGrayRMin = 0.08f;Engine.TutorialGrayRMax = 0.15f; 
+			TutorialText.animateText("To pack a gift,                 draw same symbol \nthat is drawn on top of it  ");
 			return TutorialState.Screen2;
-		case Screen2:
+		case Screen2:			
+			TutorialText.animateText("If gift has more then      one symbol on top of it,\nfirst symbol that you   have to draw is \nthe most left one   ");
 			return TutorialState.Screen3;
 		case Screen3:
+			TutorialText.animateText("Are you ready to start      your first game?   ");
 			return TutorialState.Screen4;
 		case Screen4:
-			return TutorialState.Return;
+			Engine.inTutorial = false;
+			Engine.inGame = true;			
+			Engine.inTutorialDrawSigns = true;
+			TutorialText.setVisibility(View.GONE);
+			TutorialText.startAnimation(animOUT);
+			btnSkip.setVisibility(View.GONE);
+			btnSkip.startAnimation(animOUT);
+			score.setText("Score: "+Engine.score);
+			score.setVisibility(View.VISIBLE);
+			score.startAnimation(animIN);
+			new Handler().postDelayed(new Runnable() {
+				public void run() {
+					Engine.paused = false;
+				}
+			}, 200);
+					
+			return TutorialState.Null;
 		}
 		return TutorialState.Null;
 	}

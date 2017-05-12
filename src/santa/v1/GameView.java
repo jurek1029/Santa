@@ -114,7 +114,8 @@ public class GameView extends GLSurfaceView
 	public void onResume()
 	{
 		super.onResume();
-		Engine.paused = false;
+		if(!Engine.inTutorial)
+			Engine.paused = false;
 		Engine.resumed = 3;
 		
 	}

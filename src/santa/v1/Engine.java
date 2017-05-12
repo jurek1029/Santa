@@ -46,10 +46,21 @@ public class Engine
 	public static TutorialState TutorialCurrentState = TutorialState.Null;
 	public static boolean inTutorial= false;
 	public static boolean inTutorialDrawSigns = true;
-	public static int TutorialTextScrollCounter =0;
+	public static boolean TutorialTextFinished = false;
+    public static boolean TutorialInit = true;
+    public static int TutorialAnimCounter = 0;
+    public static int TutorialAnimLength = 180;
+    public static float TutorialLeftPointX = 0.25f,TutorialLeftPointY = 0.5f;
+    public static float TutorialShapeSize = 0.5f;
+    public static int TutorialFingerTexture = R.drawable.finger;
+    public static float TutorialFingerScale = 0.15f;
+    public static boolean TutorialDrawAnim = true;
+    public static float TutorialGrayY=0.66f,TutorialGrayRMin = 0.15f,TutorialGrayRMax = 0.25f;
 	
 //Line
 	public static Vector<Pair<Float, Float>> pLine;
+	public static Line line;
+	public static boolean update = false;
 	public static int minDeltaToRegisterMove = 3;
 
 //Shape
@@ -58,8 +69,6 @@ public class Engine
 		lineV,lineH,V,A,square,circle,tringle,NULL
 	}
 	public static shape currentShape = shape.NULL;
-	public static Line line;
-	public static boolean update = false;
 	public static Vector<Shapes> shapes;
 	public static final float MAX_NORM_DISTORTION = Float.MAX_VALUE; // TODO set value
 	public static final float MIN_RATIO_FOR_VA = 0.3f;

@@ -109,6 +109,17 @@
         android:textColor="#ffffff"
         android:textSize="30sp"/>
 
+        <TextView
+        android:id="@+id/textViewNewRecord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/endScore"
+        android:layout_centerHorizontal="true"
+        android:text="New Record"
+        android:textSize="40sp"
+        android:textColor="#FFD700" 
+        android:visibility="gone"/>
+    
     <TextView
         android:id="@+id/endScore"
         android:visibility="gone"
@@ -122,21 +133,41 @@
 
     <Button
         android:id="@+id/buttonTutorial"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+  		android:layout_width="100dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="66dp"
-        android:text="Tutorial" />
+        android:background="@drawable/text_box"
+        android:text="Tutorial" 
+        android:textColor="#ffffff"/>
 
     <santa.v1.Typewriter
          android:id="@+id/textViewTutorial"
         android:layout_width="fill_parent"
-        android:layout_marginLeft="25px"
-        android:layout_marginRight="25px"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="80dp"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
-        android:textSize="22sp"
-        android:visibility="gone" />
+        android:textSize="22dp"
+        android:visibility="gone"
+        android:background="@drawable/text_box" />
+
+    <ImageButton
+        android:id="@+id/imageButtonSkip"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/text_box"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        android:src="@drawable/skip" />
+
+
 
 </RelativeLayout>

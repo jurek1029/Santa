@@ -2,7 +2,9 @@ package Objects;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.os.Handler;
 import android.util.Pair;
+import android.util.Xml.Encoding;
 
 import java.util.Iterator;
 import java.util.ListIterator;
@@ -12,6 +14,7 @@ import java.util.Vector;
 import javax.microedition.khronos.opengles.GL10;
 
 import santa.v1.Engine;
+import santa.v1.Engine.TutorialState;
 import santa.v1.GLES2Renderer;
 import santa.v1.Graphic;
 import santa.v1.SantaActivity;
@@ -66,6 +69,13 @@ public class PresentFactory {
                     {
                     	SantaActivity.score.setText("Score: "+ ++Engine.score);
                     	presentUnPackCount--;
+                    	//-------------------------Tutorial-------------------------
+                    	if(Engine.TutorialCurrentState == TutorialState.Screen2){
+                    		Engine.TutorialDrawAnim = false;
+                    		SantaActivity.TutorialText.animateText("Good Job   ");
+                    		Engine.TutorialGrayY=0.66f;Engine.TutorialGrayRMin = 0.15f;Engine.TutorialGrayRMax = 0.25f;
+                    	}
+                    	//----------------------------------------------------------
                     }
                 }
             }
