@@ -139,7 +139,7 @@ public class PresentFactory {
             	}
             	it.remove();
             }
-            Engine.slowCb();
+
         }
         
         GLES20.glUseProgram(GLES2Renderer.mProgramHandle); 	
@@ -162,31 +162,7 @@ public class PresentFactory {
 
     }
 
-    public void drawPresents(GL10 gl)
-    {
-        Iterator<Present> it = Engine.vPresents.iterator();
-        while(it.hasNext())
-        {
-            Present p=it.next();
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-            gl.glLoadIdentity();
-            gl.glTranslatef(p.x, p.y, 0);
-            gl.glScalef(p.width, p.height, 1);
-            gl.glTranslatef(0.5f,0.5f, 0f);
-            gl.glRotatef(p.rotationAngle, 0,0,1);
-            gl.glTranslatef(-0.5f,-0.5f, 0f);
 
-            gl.glMatrixMode(GL10.GL_TEXTURE);
-            gl.glLoadIdentity();
-
-            p.draw(gl);
-
-            Engine.ps.drawSigns(p,gl);
-
-            if (p.y<-Engine.presentMaxSize-0.1f) it.remove();
-        }
-
-    }
 
     public void getSpawnLocations()
     {
@@ -243,6 +219,7 @@ public class PresentFactory {
 
         PresentSigns.signsMaxNumber=Engine.signsMaxNumber;
         PresentSigns.signsNormalNumber=Engine.signsNormalNumber;
+        PresentSigns.signsMinNumber=Engine.signsMinNumber;
     }
 
 }

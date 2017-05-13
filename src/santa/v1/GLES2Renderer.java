@@ -101,6 +101,8 @@ public class GLES2Renderer implements Renderer
 		{		
 			if(!Engine.paused && !Engine.inTutorial)
 				Engine.gravity(loopRunTime);
+				if (Engine.slowStartTime>0) Engine.slowCb();
+
 			
 		//	GLES20.glUseProgram(mProgramHandle); 	
 	    //	getLocations(mProgramHandle);
@@ -117,7 +119,8 @@ public class GLES2Renderer implements Renderer
 			}
 			mColor = new float[]{1,1,1,(float)Engine.animationCounter/(float)Engine.fadingDuration};
 			//------------------------------------------------------------------------------------------------------------
-			
+
+
 	    	for(ConveyorBelt cb : Engine.vCBelt)
 	    		cb.draw();
 	

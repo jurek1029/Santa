@@ -54,13 +54,6 @@ public class PresentSigns {
             shape.textureHandle = texture;
     }
 
-    public PresentSigns(int texture, GL10 gl)
-    {
-        if (SantaActivity.supportsEs2)
-            shape.textureHandle = Graphic.loadTextureGLES2(Engine.ctx, texture);
-        else
-            shape.textureHandle = Graphic.loadTextureGLES1(Engine.ctx, texture, gl);
-    }
 
     public Vector<Integer> genSigns()
     {
@@ -127,30 +120,7 @@ public class PresentSigns {
 
     }
 
-    private void drawSingleSign(int number,GL10 gl)
-    {
-        setSignPos();
-        float textureXpos, textureYpos;
 
-        textureXpos = number%Engine.signSpriteSize;
-        textureYpos = number/Engine.signSpriteSize;
-
-        //TODO
-        //set matrixes for GL10
-
-        gl.glMatrixMode(GL10.GL_MODELVIEW);
-        gl.glLoadIdentity();
-        gl.glTranslatef(shape.x,shape.y, 0);
-        gl.glScalef(shape.width, shape.height, 1);
-
-        gl.glMatrixMode(GL10.GL_TEXTURE);
-        gl.glLoadIdentity();
-        gl.glScalef(shape.textureScale, shape.textureScale,1);
-        gl.glTranslatef(textureXpos, textureYpos, 0);
-
-        shape.draw(gl);
-
-    }
 
     public void setPresentParam(float x, float y, float w, float h, Vector<Integer> vect)
     {
@@ -183,18 +153,7 @@ public class PresentSigns {
         }
     }
 
-    public void drawSigns(Present p,GL10 gl)
-    {
 
-        setPresent(p);
-        actSignIndex=0;
-        for (Integer num:signVect)
-        {
-            drawSingleSign(num,gl);
-            actSignIndex++;
-
-        }
-    }
 
     public static void increaseAmount()
     {

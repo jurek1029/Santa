@@ -69,20 +69,4 @@ public class ConveyorBelt
 		Matrix.translateM(GLES2Renderer.mModelMatrix, 0, 2*halfLength, 0, 0);
 		RightEnd.draw();
 	}
-	
-	public void draw(GL10 gl)
-	{	
-		gl.glMatrixMode(GL10.GL_TEXTURE);
-		gl.glLoadIdentity();
-		gl.glMatrixMode(GL10.GL_MODELVIEW);
-		gl.glLoadIdentity();
-		gl.glTranslatef(x-halfLength, y, 0);
-		leftEnd.draw(gl,Engine.PCSpriteHandle);
-		gl.glTranslatef(1f/Engine.ConveyorBeltScale, 0, 0);
-		Middle.draw(gl,Engine.PCSpriteHandle);
-		gl.glTranslatef(2*halfLength, 0, 0);
-		RightEnd.draw(gl,Engine.PCSpriteHandle);
-		gl.glLoadIdentity();		
-	}
-	
 }

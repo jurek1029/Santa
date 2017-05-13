@@ -67,14 +67,5 @@ public class Line extends Object {
 
 		GLES20.glDisableVertexAttribArray(GLES2Renderer.mPositionHandle);
 	}
-	@Override
-	public void draw(GL10 gl) 
-	{
-		gl.glMatrixMode(GL10.GL_MODELVIEW);
-		gl.glLoadIdentity();
-		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer);
-		gl.glDrawArrays(GLES20.GL_LINE_STRIP, 0, vertices.length/3);
-		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-	}
+
 }

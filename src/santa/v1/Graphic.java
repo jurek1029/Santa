@@ -61,37 +61,7 @@ public class Graphic
 		return textureHandle[0];
 	}
 	
-	public static int loadTextureGLES1(final Context context, final int resourceId,GL10 gl)
-	{
-		final int[] textureHandle = new int[1];
-		
-		gl.glGenTextures(1, textureHandle, 0);
-		
-		if (textureHandle[0] != 0)
-		{
-			final BitmapFactory.Options options = new BitmapFactory.Options();
-			options.inScaled = false;	// No pre-scaling
 
-			final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
-						
-			gl.glBindTexture(GL10.GL_TEXTURE_2D, textureHandle[0]);
-			
-			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
-			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_REPEAT);
-			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_REPEAT);
-			
-			GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
-			bitmap.recycle();						
-		}
-		
-		if (textureHandle[0] == 0)
-		{
-			throw new RuntimeException("Error loading texture.");
-		}
-		
-		return textureHandle[0];
-	}
 	
 	@SuppressWarnings("resource")
 	public static int loadDDSTexture(final Context context, final int texture)
