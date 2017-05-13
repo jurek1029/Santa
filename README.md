@@ -17,7 +17,13 @@ Game also has it own tutorial.
 <p align="center">
 <img src="https://github.com/jurek1029/Santa/blob/jurek1029-description/screenShots/ScreenshotTutorial.png" alt="alt text">
 </p>
-<p align="center">
-Game was created by Jakub Jurek and Przemek Wilczyński.
-</p>
+
+# Built With
+ * [Eclipse Kelpler](https://eclipse.org/kepler/)
+ * [Eclipse ADT plugin](https://developer.android.com/studio/tools/sdk/eclipse-adt.html)
+# Authors
+ * [Jakub Jurek](https://github.com/jurek1029)
+ * Przemek Wilczyński.
+# Acknowledgments
+* [Stack Overflow](https://stackoverflow.com/)
 
