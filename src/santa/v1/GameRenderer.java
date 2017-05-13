@@ -47,8 +47,10 @@ public class GameRenderer implements Renderer
 			
 			if(Engine.inGame)
 			{
+
+
 				Engine.gravity(loopRunTime);
-		
+
 				if(Engine.animationType == 1)
 				{
 					if(Engine.animationCounter < Engine.fadingDuration)++Engine.animationCounter;
@@ -66,7 +68,7 @@ public class GameRenderer implements Renderer
 				Engine.pf.spawn();
 				Engine.pf.makeGameHarder();
 				Engine.pf.drawPresents(gl);
-				
+
 				if(Engine.update)
 				{
 					Engine.line.updateVertices((Vector<Pair<Float, Float>>) Engine.pLine.clone());

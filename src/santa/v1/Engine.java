@@ -98,7 +98,7 @@ public class Engine
 	public static int snowSpriteSize = 5;
 
 //PresentSigns
-	public static int signsMaxNormalNumber = 6;
+	public static int signsMaxNormalNumber = 9;
 	public static int signsMaxNumber = 4;
 	public static int signsMinNumber = 1;
 	public static int signsNormalNumber = 2;
@@ -117,7 +117,7 @@ public class Engine
 	public static float presentMaxSize = 0.19f;
 	public static int presentSpriteSize = 2;
 	public static int presentTypeQuantity = 4;
-	public static int presentMaxQuantity = 5;
+	public static int presentMaxQuantity = 8;
 
 	public static Vector<Present> vPresents;
 	public static PresentFactory pf;
@@ -126,6 +126,9 @@ public class Engine
 	public static Vector<ConveyorBelt> vCBelt;
 	public static float ConveyorBeltScale = 10f;
 	public static Vector<SpawnLocation>  vSpawnLocation;
+	public static float cbSpeedMultilier = 1f;
+	public static long slowStartTime=-1;
+	public static long slowTime = 2800;
 
 //time
 	public static long framesCounter = 0;
@@ -151,7 +154,7 @@ public class Engine
 				if(collision == 1) // flat
 				{
 					p.Vy = 0;
-					p.x += cb.speed*s;
+					p.x += cb.speed*s*cbSpeedMultilier;
 					p.lastCollision = collision;
 					break;					
 				}
@@ -214,6 +217,32 @@ public class Engine
 			return 3;
 		}
 		return 0;
+	}
+
+	public static void slowCb()
+	{
+		long dt = System.currentTimeMillis()-slowStartTime;
+
+		if (dt<.7*slowTime)
+		{
+			cbSpeedMultilier-=0.002;
+			if (cbSpeedMultilier<0) cbSpeedMultilier=0;
+			return;
+		}
+		else if (dt<=1.3*slowTime) return;
+		else if (dt>=1.3*slowTime && dt<=2*slowTime)
+		{
+			cbSpeedMultilier+=0.002;
+			if (cbSpeedMultilier>1) cbSpeedMultilier=1;
+			return;
+		}
+		else
+
+		{
+			cbSpeedMultilier=1f;
+			slowStartTime=-1;
+		}
+		return;
 	}
 }
 

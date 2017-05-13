@@ -133,10 +133,13 @@ public class PresentFactory {
             	if(p.signs.size() > 0)
             	{
             		Engine.health--;
+                    if (Engine.slowStartTime<0) Engine.slowStartTime=System.currentTimeMillis();
             		Engine.vib.vibrate(100);
+
             	}
             	it.remove();
             }
+            Engine.slowCb();
         }
         
         GLES20.glUseProgram(GLES2Renderer.mProgramHandle); 	
@@ -214,7 +217,7 @@ public class PresentFactory {
         Engine.timeCounter = Engine.framesCounter/60.0;
 
         presentMaxQuantity = Math.min(2+(int)Math.sqrt(Engine.timeCounter/15),Engine.presentMaxQuantity);
-        int newSgnNormalNumber=Math.min((int)(2 + (Engine.timeCounter/30)),Engine.signsMaxNormalNumber);
+        int newSgnNormalNumber=Math.min((int)(2 + (Engine.timeCounter/25)),Engine.signsMaxNormalNumber);
         if (newSgnNormalNumber==PresentSigns.signsNormalNumber+1)
         {
             PresentSigns.increaseAmount();
@@ -232,6 +235,11 @@ public class PresentFactory {
 
         Engine.framesCounter=0;
         Engine.timeCounter=0;
+        presentUnPackCount=0;
+        Engine.vSpawnLocation.clear();
+        getSpawnLocations();
+        Engine.slowStartTime=-1;
+        Engine.cbSpeedMultilier=1;
 
         PresentSigns.signsMaxNumber=Engine.signsMaxNumber;
         PresentSigns.signsNormalNumber=Engine.signsNormalNumber;

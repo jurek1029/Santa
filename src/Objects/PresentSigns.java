@@ -200,5 +200,6 @@ public class PresentSigns {
     {
         signsMaxNumber++;
         signsNormalNumber++;
+        signsMinNumber++;
     }
 }
