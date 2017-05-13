@@ -556,6 +556,17 @@ public class SantaActivity extends Activity {
 				try {
 					Thread.sleep(1700);
 				} catch (InterruptedException e) {e.printStackTrace();}
+				
+				if(Engine.score > Engine.bestScore)
+				{
+					SharedPreferences settings = getSharedPreferences("best", 0);
+				    SharedPreferences.Editor editor = settings.edit();
+				    editor.putInt("bestScore", Engine.score);
+				    editor.commit();
+				    Engine.bestScore = Engine.score; 			    
+				}
+				Engine.score = 0;
+				
 				endScore.post(new Runnable() {
 					public void run() {
 						if(newRecord.getVisibility() == View.VISIBLE){
@@ -569,15 +580,7 @@ public class SantaActivity extends Activity {
 			}
 		}).start();
 		
-		if(Engine.score > Engine.bestScore)
-		{
-			SharedPreferences settings = getSharedPreferences("best", 0);
-		    SharedPreferences.Editor editor = settings.edit();
-		    editor.putInt("bestScore", Engine.score);
-		    editor.commit();
-		    Engine.bestScore = Engine.score; 			    
-		}
-		Engine.score = 0;
+		
 		
 		new Thread(new Runnable() {
 			public void run() {
@@ -643,6 +646,13 @@ public class SantaActivity extends Activity {
 				pauseBG.post(new Runnable() {
 					public void run() {
 				        pauseBG.setVisibility(View.GONE);
+					}
+				});
+				
+				btnTutorial.post(new Runnable() {
+					public void run() {
+						btnTutorial.setVisibility(View.VISIBLE);
+						btnTutorial.startAnimation(animIN);
 					}
 				});
 				
