@@ -6,7 +6,7 @@ This is a simple mobile game, the basic objective of the game is to wrap gifts t
 <img src="https://github.com/jurek1029/Santa/blob/jurek1029-description/screenShots/ScreenshotMenu.png" alt="alt text">
 </p>
 <p align="center">
-To wrap a gift you are supposed to draw sign on your phone screen. That is similar to the most left sing over the gift.
+To wrap a gift you are supposed to draw sign on your phone screen. That is similar to the most left sign over the gift.
 </p>
 <p align="center">
 <img src="https://github.com/jurek1029/Santa/blob/jurek1029-description/screenShots/ScreenshotGame.png" alt="alt text">
