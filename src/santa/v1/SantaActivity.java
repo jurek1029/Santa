@@ -57,7 +57,8 @@ public class SantaActivity extends Activity {
 	ImageView pauseBG;
 	
 	static AlphaAnimation animIN ,animOUT;
-	ScaleAnimation animScIN, animScOUT;	
+	ScaleAnimation animScIN, animScOUT;
+	boolean touchedBonus = false;
 	
     int permision;
 	
@@ -211,6 +212,9 @@ public class SantaActivity extends Activity {
 		x = event.getX(c);
 		y = event.getY(c);
 		y = Engine.height - y;
+
+		float scaledX = x/Engine.width;
+		float scaledY = y/Engine.height;
 			
 		switch(event.getActionMasked())
 		{
@@ -225,8 +229,22 @@ public class SantaActivity extends Activity {
 							Engine.TutorialAnimCounter = 0;
 						}
 					}
-					Engine.pLine.add(new Pair<Float, Float>(x, y));
-					Engine.update = true;
+
+					if (Engine.bonus!=null)
+					{
+						if (Engine.bonus.isTouched(scaledX,scaledY))
+						{
+							Engine.bonus.upgradePlayer();
+							touchedBonus = true;
+
+						}
+
+					}
+					if (!touchedBonus) {
+						Engine.pLine.add(new Pair<Float, Float>(x, y));
+						Engine.update = true;
+					}
+
 					
 				}
 				else if (Engine.inTutorial && Engine.TutorialTextFinished)
@@ -243,7 +261,7 @@ public class SantaActivity extends Activity {
 			case MotionEvent.ACTION_MOVE:
 			{
 				Engine.TutorialDrawAnim = false;
-				if(Engine.inGame && !Engine.paused)
+				if(Engine.inGame && !Engine.paused && !touchedBonus)
 				{
 					if(Math.sqrt((Engine.pLine.lastElement().first - x) * (Engine.pLine.lastElement().first - x) + (Engine.pLine.lastElement().second - y) * (Engine.pLine.lastElement().second - y))
 							> Engine.minDeltaToRegisterMove)
@@ -255,7 +273,7 @@ public class SantaActivity extends Activity {
 			}
 			case MotionEvent.ACTION_UP:
 			{
-				if(Engine.inGame && !Engine.paused)
+				if(Engine.inGame && !Engine.paused && !touchedBonus )
 				{
 					Engine.currentShape = recogniseShape();
 				//	tv = (TextView)findViewById(R.id.textView1);
@@ -268,6 +286,7 @@ public class SantaActivity extends Activity {
 					}
 					Engine.pf.checkSigns();
 				}
+				touchedBonus = false;
 				break;
 			}
 			case MotionEvent.ACTION_POINTER_UP:
@@ -286,7 +305,7 @@ public class SantaActivity extends Activity {
     	{
     		nsTemp = s.calculateNorm();
     		if(nsMin.norm > nsTemp.norm) nsMin = nsTemp;	
-    		System.out.println(nsTemp.shape + " "+ nsTemp.norm);
+    	//	System.out.println(nsTemp.shape + " "+ nsTemp.norm);
     	}
     	
     	if(nsMin.norm > Engine.MAX_NORM_DISTORTION) return Engine.shape.NULL;
@@ -540,7 +559,7 @@ public class SantaActivity extends Activity {
 				final AlphaAnimation animIN2,animOUT2;
 				animIN2 = new AlphaAnimation(0.0f, 1.0f);
 				animIN2.setDuration(1000);
-				animOUT2 = new AlphaAnimation(1f, 0f); // idfk jak bylo aminOUT to nie dzia³a³o 
+				animOUT2 = new AlphaAnimation(1f, 0f); // idfk jak bylo aminOUT to nie dzialalo
 				animOUT2.setDuration(300);
 				endScore.post(new Runnable() {
 					public void run() {
@@ -556,17 +575,6 @@ public class SantaActivity extends Activity {
 				try {
 					Thread.sleep(1700);
 				} catch (InterruptedException e) {e.printStackTrace();}
-				
-				if(Engine.score > Engine.bestScore)
-				{
-					SharedPreferences settings = getSharedPreferences("best", 0);
-				    SharedPreferences.Editor editor = settings.edit();
-				    editor.putInt("bestScore", Engine.score);
-				    editor.commit();
-				    Engine.bestScore = Engine.score; 			    
-				}
-				Engine.score = 0;
-				
 				endScore.post(new Runnable() {
 					public void run() {
 						if(newRecord.getVisibility() == View.VISIBLE){
@@ -580,7 +588,15 @@ public class SantaActivity extends Activity {
 			}
 		}).start();
 		
-		
+		if(Engine.score > Engine.bestScore)
+		{
+			SharedPreferences settings = getSharedPreferences("best", 0);
+		    SharedPreferences.Editor editor = settings.edit();
+		    editor.putInt("bestScore", Engine.score);
+		    editor.commit();
+		    Engine.bestScore = Engine.score; 			    
+		}
+		Engine.score = 0;
 		
 		new Thread(new Runnable() {
 			public void run() {
@@ -646,13 +662,6 @@ public class SantaActivity extends Activity {
 				pauseBG.post(new Runnable() {
 					public void run() {
 				        pauseBG.setVisibility(View.GONE);
-					}
-				});
-				
-				btnTutorial.post(new Runnable() {
-					public void run() {
-						btnTutorial.setVisibility(View.VISIBLE);
-						btnTutorial.startAnimation(animIN);
 					}
 				});
 				

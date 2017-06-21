@@ -84,7 +84,7 @@ public class Engine
 	}
 
 //PresentSigns
-	public static int signsMaxNormalNumber = 9;
+	public static int signsMaxNormalNumber = 8;
 	public static int signsMaxNumber = 4;
 	public static int signsMinNumber = 1;
 	public static int signsNormalNumber = 2;
@@ -103,7 +103,7 @@ public class Engine
 	public static float presentMaxSize = 0.19f;
 	public static int presentSpriteSize = 2;
 	public static int presentTypeQuantity = 4;
-	public static int presentMaxQuantity = 8;
+	public static int presentMaxQuantity = 7;
 
 	public static Vector<Present> vPresents;
 	public static PresentFactory pf;
@@ -114,11 +114,30 @@ public class Engine
 	public static Vector<SpawnLocation>  vSpawnLocation;
 	public static float cbSpeedMultilier = 1f;
 	public static long slowStartTime=-1;
-	public static long slowTime = 2800;
+	public static long cbSlowTime = 2500;
 
 //time
 	public static long framesCounter = 0;
 	public static double timeCounter = 0;
+
+
+//bonus
+	public static int bonusSpriteTexture = R.drawable.bon;
+	public static int bonusTextureHandle;
+	public static float bonusWidth = 0.1f;
+	public static float bonusVelocity = 0.35f;
+	public static Bonus bonus = null;
+	public static Present bonusLastPresent = null; //prezent na podstawie ktorego ma powstac bonus
+	public static  boolean bonusToCreate = false; //czy bonus czeka do utworzenia
+	public static int bonusMinPresentsForBonus = 10;
+	public static int bonusMinEndingPresentsForBonus = 5;
+	public static long bonusSlowTime = 3000;
+
+
+//slaw
+	public static boolean slowByBonus;
+	public static long slowTime;
+
 
 	
 // Physics 
@@ -127,7 +146,8 @@ public class Engine
 	{
 		if(loopRunTime<Engine.GAME_THREAD_FPS_SLEEP)loopRunTime = Engine.GAME_THREAD_FPS_SLEEP;
 		float s = (float)(loopRunTime)/1000f;
-		
+
+
 		int collision = 0;
 		for(Present p : Engine.vPresents)
 		{
@@ -207,18 +227,20 @@ public class Engine
 
 	public static void slowCb()
 	{
+		if (slowByBonus) slowTime = bonusSlowTime;
+		else slowTime = cbSlowTime;
 		long dt = System.currentTimeMillis()-slowStartTime;
 
-		if (dt<.7*slowTime)
+		if (dt<.55*slowTime)
 		{
-			cbSpeedMultilier-=0.002;
+			cbSpeedMultilier-=0.007;
 			if (cbSpeedMultilier<0) cbSpeedMultilier=0;
 			return;
 		}
-		else if (dt<=1.3*slowTime) return;
-		else if (dt>=1.3*slowTime && dt<=2*slowTime)
+		else if (dt<=1.45*slowTime) return;
+		else if (dt>=1.45*slowTime && dt<=2*slowTime)
 		{
-			cbSpeedMultilier+=0.002;
+			cbSpeedMultilier+=0.008;
 			if (cbSpeedMultilier>1) cbSpeedMultilier=1;
 			return;
 		}
@@ -227,6 +249,7 @@ public class Engine
 		{
 			cbSpeedMultilier=1f;
 			slowStartTime=-1;
+			slowByBonus = false;
 		}
 		return;
 	}

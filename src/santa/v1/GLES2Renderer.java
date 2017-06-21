@@ -11,6 +11,7 @@ import santa.v1.Engine.TutorialState;
 import Objects.ConveyorBelt;
 import Objects.GrayOverlay;
 import Objects.Object;
+import Objects.Bonus;
 import Objects.Present;
 import Objects.SpawnLocation;
 import android.annotation.SuppressLint;
@@ -100,9 +101,11 @@ public class GLES2Renderer implements Renderer
 		if(Engine.inGame)
 		{		
 			if(!Engine.paused && !Engine.inTutorial)
+			{
 				Engine.gravity(loopRunTime);
+				if (Engine.bonus!=null) Engine.bonus.update(loopRunTime);
 				if (Engine.slowStartTime>0) Engine.slowCb();
-
+			}
 			
 		//	GLES20.glUseProgram(mProgramHandle); 	
 	    //	getLocations(mProgramHandle);
@@ -115,7 +118,11 @@ public class GLES2Renderer implements Renderer
 			{
 				if(Engine.animationCounter > 0)--Engine.animationCounter;
 				else 	
-					{Engine.inGame = false; Engine.pf.backToBeginning();}
+					{
+						Engine.inGame = false;
+						Engine.pf.backToBeginning();
+						Bonus.backToBeginning();
+					}
 			}
 			mColor = new float[]{1,1,1,(float)Engine.animationCounter/(float)Engine.fadingDuration};
 			//------------------------------------------------------------------------------------------------------------
@@ -129,8 +136,11 @@ public class GLES2Renderer implements Renderer
 				Engine.pf.spawn();
 				Engine.pf.makeGameHarder();
 	    	}
-			
+
 		    Engine.pf.drawPresents();
+
+			if (Engine.bonusToCreate) Bonus.makeBonus();
+			drawBonus();
 		    if(Engine.health > 0)
 		    {
 			   drawHearts();
@@ -305,7 +315,24 @@ public class GLES2Renderer implements Renderer
 	    	Engine.Hearts[i].draw();
 	    }	
 	}
-	
+
+	private void drawBonus()
+	{
+		if (Engine.bonus!=null)
+		{
+			Matrix.setIdentityM(GLES2Renderer.mTextureMatrix,0);
+			Matrix.setIdentityM(GLES2Renderer.mModelMatrix, 0);
+			Matrix.translateM(GLES2Renderer.mModelMatrix,0,Engine.bonus.x,Engine.bonus.y,0);
+			Matrix.scaleM(GLES2Renderer.mModelMatrix,0,Engine.bonusWidth,Engine.bonusWidth*Engine.width/Engine.height,1);
+			GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, Engine.bonusTextureHandle);
+			GLES20.glUniform1i(GLES2Renderer.mTextureUniformHandle, 0);
+
+			Engine.bonus.draw();
+		}
+	}
+
+
 	private void drawGrayOverlay(float centerX,float centerY, float radMin, float radMax, float alphaMin, float alphaMax)
 	{
 		GLES20.glUseProgram(mProgramGray); 	

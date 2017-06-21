@@ -1,8 +1,5 @@
 package Objects;
 
-/**
- * Created by Przemek on 10.12.2016.
- */
 
 import java.util.Random;
 import java.util.Vector;

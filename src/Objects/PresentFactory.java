@@ -18,10 +18,7 @@ import santa.v1.Engine.TutorialState;
 import santa.v1.GLES2Renderer;
 import santa.v1.Graphic;
 import santa.v1.SantaActivity;
-
-/**
- * Created by Przemek on 10.12.2016.
- */
+import Objects.Bonus;
 
 public class PresentFactory {
 
@@ -69,6 +66,10 @@ public class PresentFactory {
                     {
                     	SantaActivity.score.setText("Score: "+ ++Engine.score);
                     	presentUnPackCount--;
+
+                        if (Engine.bonus==null)
+                            Bonus.createBonus(p);
+
                     	//-------------------------Tutorial-------------------------
                     	if(Engine.TutorialCurrentState == TutorialState.Screen2){
                     		Engine.TutorialDrawAnim = false;
@@ -193,7 +194,7 @@ public class PresentFactory {
         Engine.timeCounter = Engine.framesCounter/60.0;
 
         presentMaxQuantity = Math.min(2+(int)Math.sqrt(Engine.timeCounter/15),Engine.presentMaxQuantity);
-        int newSgnNormalNumber=Math.min((int)(2 + (Engine.timeCounter/25)),Engine.signsMaxNormalNumber);
+        int newSgnNormalNumber=Math.min((int)(2 + (Engine.timeCounter/20)),Engine.signsMaxNormalNumber);
         if (newSgnNormalNumber==PresentSigns.signsNormalNumber+1)
         {
             PresentSigns.increaseAmount();
@@ -216,6 +217,8 @@ public class PresentFactory {
         getSpawnLocations();
         Engine.slowStartTime=-1;
         Engine.cbSpeedMultilier=1;
+        Engine.bonusLastPresent = null;
+        Engine.bonus = null;
 
         PresentSigns.signsMaxNumber=Engine.signsMaxNumber;
         PresentSigns.signsNormalNumber=Engine.signsNormalNumber;

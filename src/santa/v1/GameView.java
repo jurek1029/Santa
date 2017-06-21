@@ -12,6 +12,7 @@ import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.util.Pair;
 
+import Objects.Bonus;
 import Objects.ConveyorBelt;
 import Objects.Object;
 import Objects.Line;
@@ -71,6 +72,7 @@ public class GameView extends GLSurfaceView
 	{
 //		Engine.ObjTab[0] = new Object(Engine.backgroundTexture,new float[]{0,0,1,0,1,(float)Engine.height/Engine.width,0,(float)Engine.height/Engine.width});
 		Engine.ObjTab[0] = new Object(Engine.textureBackground);
+		Engine.bonusTextureHandle = Graphic.loadTextureGLES2(context, Engine.bonusSpriteTexture);
 		
 		Engine.PCSpriteHandle = Graphic.loadTextureGLES2(context, Engine.PCSpriteTexture);
 		Engine.vPresents = new Vector<Present>();
