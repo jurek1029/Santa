@@ -83,6 +83,14 @@ public class PresentFactory {
             }
     }
 
+    public void wrapPresent(Present p)
+    {
+        p.signs.clear();
+        SantaActivity.score.setText("Score: "+ ++Engine.score);
+        presentUnPackCount--;
+
+    }
+
     public void drawPresents() // zmienilem w celu optymalizacji
     { 
     	GLES20.glUseProgram(GLES2Renderer.mProgramPercentHandle); 	

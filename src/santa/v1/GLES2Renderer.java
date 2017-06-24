@@ -137,16 +137,16 @@ public class GLES2Renderer implements Renderer
 				Engine.pf.makeGameHarder();
 	    	}
 
+			if(Engine.health > 0)
+				drawHearts();
+			else Engine.MainActivity.endScreen();
+
 		    Engine.pf.drawPresents();
 
 			if (Engine.bonusToCreate) Bonus.makeBonus();
 			drawBonus();
-		    if(Engine.health > 0)
-		    {
-			   drawHearts();
-			   
-		    }
-		    else Engine.MainActivity.endScreen();
+
+
 		    
 	    	drawTutorial();
 		    
