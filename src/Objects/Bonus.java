@@ -19,6 +19,7 @@ public class Bonus extends Object {
     private static int minPresentsForBonus = Engine.bonusMinPresentsForBonus;
     private static int presentWrapped = 0;
     private static int counter = 0;
+    private static int countLimit = 2;
     long timeCounter;
     float a,b;
     double theta = 0.0;
@@ -56,8 +57,27 @@ public class Bonus extends Object {
                         1.0f, .5f,
                         0.5f, .5f
                 };
-
              break;
+
+            case wrapOne:
+                this.texture = new float[] {
+                        0.0f, 0.5f,
+                        .5f, 0.5f,
+                        .5f, 1.0f,
+                        0.0f, 1.0f
+                };
+                break;
+
+            case wrapAll:
+                this.texture = new float[] {
+                        0.5f, 0.5f,
+                        1.0f, 0.5f,
+                        1.0f, 1.0f,
+                        0.5f, 1.0f
+                };
+                break;
+
+
         }
 
         allocate();
@@ -89,8 +109,7 @@ public class Bonus extends Object {
         if (rnd.nextFloat()>0.25) return;
 
         counter++;
-        if (counter>2) minPresentsForBonus--;
-      //  minPresentsForBonus--;
+        if (counter>countLimit) minPresentsForBonus--;
         presentWrapped = 0;
         Engine.bonusLastPresent = p;
         Engine.bonusToCreate = true;
@@ -99,9 +118,8 @@ public class Bonus extends Object {
     public static void makeBonus()
     {
         Random rand = new Random();
-        int i = rand.nextInt(2); //poki co tylko bonus 0 i 1 sa
+        int i = rand.nextInt(4);
         Present p = Engine.bonusLastPresent;
-       // Engine.bonus = new Bonus(p.x+(p.width-Engine.bonusWidth)/2, p.y+p.height/2,Type.values()[i]);
         Engine.bonus = new Bonus(p.x+(p.width-Engine.bonusWidth)/2,-Engine.bonusWidth,Type.values()[i]);
         Engine.bonusToCreate = false;
         Engine.bonusLastPresent = null;

@@ -129,8 +129,8 @@ public class Engine
 	public static Bonus bonus = null;
 	public static Present bonusLastPresent = null; //prezent na podstawie ktorego ma powstac bonus
 	public static  boolean bonusToCreate = false; //czy bonus czeka do utworzenia
-	public static int bonusMinPresentsForBonus = 10;
-	public static int bonusMinEndingPresentsForBonus = 5;
+	public static int bonusMinPresentsForBonus = 15;
+	public static int bonusMinEndingPresentsForBonus = 8;
 	public static long bonusSlowTime = 3000;
 
 
